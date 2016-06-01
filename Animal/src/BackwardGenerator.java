@@ -17,6 +17,8 @@ public class BackwardGenerator {
 	private double output[] = {0, 0};
 	private double norm;
 	
+	private Language lang;
+	
 	private void computeProbabilities(double[][] T, double[][] B, int[] input){
 
 		Language lang = Language.getLanguageInstance(AnimationType.ANIMALSCRIPT,
@@ -36,16 +38,20 @@ public class BackwardGenerator {
 		//CHANGING
 		DoubleArray bi = lang.newDoubleArray(new Coordinates(20, 100), b_i, "Backward Probabilities", null, ap);
 		DoubleArray result = lang.newDoubleArray(new Coordinates(200, 200), output, "Current Result", null, ap);
-		
+
 		for(int i = input.length-1; i >= 0; i--){
 			int seq_in = input[i];
 			
 			for(int j = 0; j < Br.getNrRows(); j++){
 				helper[j] = bi.getData(j) * Br.getElement(j, seq_in);
 			}
+			
+
 			for(int n = 0; n < result.getLength(); n++){
 				result.put(n, 0, null,null);
+
 			}	
+			
 			for(int m = 0; m < Tr.getNrRows(); m++){
 				for(int n = 0; n < Tr.getNrRows(); n++){ 
 					result.put(m, (result.getData(m) + Tr.getElement(m,n) * helper[n]), null, null);
@@ -54,6 +60,7 @@ public class BackwardGenerator {
 			for(int n = 0; n < result.getLength(); n++){
 				bi.put(n, result.getData(n), null, null);
 			}
+			
 		}
 
 		System.out.println(lang.toString());
