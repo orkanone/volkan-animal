@@ -9,6 +9,7 @@ import algoanim.properties.ArrayMarkerProperties;
 import algoanim.properties.ArrayProperties;
 import algoanim.properties.MatrixProperties;
 import algoanim.properties.SourceCodeProperties;
+import algoanim.properties.TextProperties;
 import algoanim.util.Coordinates;
 import algoanim.util.TicksTiming;
 import algoanim.util.Timing;
@@ -22,11 +23,10 @@ public class BackwardGenerator {
 	private double output[] = {0, 0};
 	private int sequenceCounter;
 	private SourceCode src;
+	private Language lang = Language.getLanguageInstance(AnimationType.ANIMALSCRIPT,
+			"HMM Backward Algorithm", "Volker Hartmann & Orkan Özyurt", 640, 480);
 	
 	private void computeProbabilities(double[][] T, double[][] B, int[] input){
-
-		Language lang = Language.getLanguageInstance(AnimationType.ANIMALSCRIPT,
-				"HMM Backward Algorithm", "Volker Hartmann & Orkan Özyurt", 640, 480);
 		lang.setStepMode(true); //schrittmodus aktivieren
 		
 		//Set Display Properties for Matrix and Array
@@ -34,26 +34,33 @@ public class BackwardGenerator {
 		mp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
 		mp.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
 	    mp.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
+	    mp.set(AnimationPropertiesKeys.GRID_STYLE_PROPERTY, "matrix");
+	    
 		ArrayProperties ap = new ArrayProperties();
 		ap.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
 		ap.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
 	    ap.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
 	    
+	    this.generateLabelsAndHeadline();
+	    
 		//Primitives to display
-		//FIX
-		DoubleMatrix Tr = lang.newDoubleMatrix(new Coordinates(20,40), T, "Transitions", null, mp);
-		DoubleMatrix Br = lang.newDoubleMatrix(new Coordinates(100,40), B, "Emissions", null, mp);
-		IntArray sequence = lang.newIntArray(new Coordinates(180, 40), input, "Input Sequence", null, ap);
-		//CHANGING
-		DoubleArray bi = lang.newDoubleArray(new Coordinates(20, 100), b_i, "Backward Probabilities", null, ap);
-		DoubleArray result = lang.newDoubleArray(new Coordinates(200, 200), output, "Current Result", null, ap);
-		DoubleArray mult_helper = lang.newDoubleArray(new Coordinates(200, 150), helper, "Matrix Multiplication Helper", null, ap);
+		//data structures that remain unchanged
+		DoubleMatrix Tr = lang.newDoubleMatrix(new Coordinates(60, 55), T, "Transitions", null, mp);
+		DoubleMatrix Br = lang.newDoubleMatrix(new Coordinates(200, 55), B, "Emissions", null, mp);
+		IntArray sequence = lang.newIntArray(new Coordinates(180, 400), input, "Input Sequence", null, ap);
+		//CHANGING data structures
+		DoubleArray bi = lang.newDoubleArray(new Coordinates(20, 180), b_i, "Backward Probabilities", null, ap);
+		DoubleArray result = lang.newDoubleArray(new Coordinates(20, 240), output, "Current Result", null, ap);
+		DoubleArray mult_helper = lang.newDoubleArray(new Coordinates(20, 300), helper, 
+										"Matrix Multiplication Helper", null, ap);
+		
+		//TODO change helper and result Array to Matrix?
 		
 		// Create two markers to point on i and j
 	    sequenceCounter = input.length-1;
 	    // Array, current index, name, display options, properties
 	    ArrayMarkerProperties arrayIMProps = new ArrayMarkerProperties();
-	    arrayIMProps.set(AnimationPropertiesKeys.LABEL_PROPERTY, "sequenceIndex");
+	    arrayIMProps.set(AnimationPropertiesKeys.LABEL_PROPERTY, "current Character");
 	    arrayIMProps.set(AnimationPropertiesKeys.COLOR_PROPERTY, Color.BLACK);
 	    ArrayMarker seqenceMarker = lang.newArrayMarker(sequence, sequenceCounter, "sequenceIndex" + sequenceCounter,
 	        null, arrayIMProps);
@@ -61,7 +68,7 @@ public class BackwardGenerator {
 	    Timing defaultTiming = new TicksTiming(30);
 	    
 	    SourceCodeProperties sourceCodeProps = new SourceCodeProperties();
-	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.ITALIC, 16));
+	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
 	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
 
 	    src = lang.newSourceCode(new Coordinates(390, 50), "sourceCode",
@@ -74,7 +81,7 @@ public class BackwardGenerator {
 			seqenceMarker.move(sequenceCounter, null, defaultTiming);
 			
 			lang.nextStep();
-			
+			//TODO WHY is highlighting so fucked up? Example: Step 15: 0.3
 			for(int j = 0; j < Br.getNrRows(); j++){
 				src.highlight(4);
 				lang.nextStep();
@@ -144,7 +151,7 @@ public class BackwardGenerator {
 	
 	
 	private void generateSourceCode(){
-		
+		//TODO Add Small headline? "Backward Algorithmus" 
 		src.addCodeLine("private void backward(double b_i[], int input_index){", null, 0, null); // 0
 		src.addCodeLine("	if(input_index >= 0){", null, 1, null); // 1
 	    src.addCodeLine("		int input = input_sequence[input_index];", null, 1, null); // 2
@@ -152,11 +159,11 @@ public class BackwardGenerator {
 	    src.addCodeLine("		for(int j = 0; j < B[0].length; j++){", null, 1, null); // 4
 	    src.addCodeLine("			helper[j] = b_i[j] * B[j][input];", null, 1, null); // 5
 	    src.addCodeLine("		}", null, 1, null); // 6
-	    src.addCodeLine("		//initialisiere ergebnisarray f�r matrix multiplikation", null, 1, null); // 7
+	    src.addCodeLine("		//initialisiere ergebnisarray für matrix multiplikation", null, 1, null); // 7
 	    src.addCodeLine("		for(int n = 0; n < output.length; n++){", null, 2, null); // 8
 	    src.addCodeLine("			output[n] = 0;", null, 2, null); // 9
 	    src.addCodeLine("		}", null, 2, null); // 10
-	    src.addCodeLine("		// Zustands�bergang: multipliziere current emission mit Transitionsmatrix", null, 2, null); // 11
+	    src.addCodeLine("		// Zustandsübergang: multipliziere current emission mit Transitionsmatrix", null, 2, null); // 11
 	    src.addCodeLine("		for(int m = 0; m < T[0].length; m++){", null, 2, null); // 12
 	    src.addCodeLine("			for(int n = 0; n < T[0].length; n++){", null, 2, null); // 13
 	    src.addCodeLine("				output[m] += T[m][n] * helper[n];", null, 2, null); // 14
@@ -165,6 +172,22 @@ public class BackwardGenerator {
 	    src.addCodeLine("	}", null, 2, null); // 17
 	    src.addCodeLine("	backward(output, input_index-1);", null, 1, null); // 18
 	    src.addCodeLine("}", null, 1, null); // 19	
+	}
+	
+	public void generateLabelsAndHeadline(){
+	    //Headline
+	    TextProperties textprops = new TextProperties();
+	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
+	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
+	    Text headline = lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    								"Headline", null, textprops);
+
+	    //Labels for primitives
+	    TextProperties labelprops = new TextProperties();
+	    labelprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 14));
+	    Text TrLabel = lang.newText(new Coordinates(25,65), "A = ", "Label A", null, labelprops);
+	    //Aus irgendeinem Grund nicht auf gleicher Höhe bei gleicher Y-Koordinate
+	    Text BLabel = lang.newText(new Coordinates(165,69), "B = ", "Label B", null, labelprops);
 	}
 	
 	
