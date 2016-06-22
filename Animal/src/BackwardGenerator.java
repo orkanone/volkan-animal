@@ -229,11 +229,11 @@ public class BackwardGenerator {
 	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 	        Font.SANS_SERIF, Font.PLAIN, 16));
 	    lang.newText(new Coordinates(10, 100),
-	        "Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph mit ‹bergangswahrscheinlichkeiten betrachtet werden.",
+	        "Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph mit √úbergangswahrscheinlichkeiten betrachtet werden.",
 	        "description1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description1",
 	        AnimalScript.DIRECTION_NW),
-	        "Hidden bedeutet in dem Sinne, dass die Zust‰nde von auﬂen nicht beobachtbar sind.",
+	        "Hidden bedeutet in dem Sinne, dass die Zust√§nde von au√üen nicht beobachtbar sind.",
 	        "description2", null, textProps);
 	    lang.newText(new Offset(0, 25, "description2",
 	        AnimalScript.DIRECTION_NW),
@@ -245,7 +245,7 @@ public class BackwardGenerator {
 	        "description4", null, textProps);
 	    lang.newText(new Offset(0, 25, "description4",
 	        AnimalScript.DIRECTION_NW),
-	        "Zusammenfassend betrachtet hat ein HMM verschiedene Zust‰nde, Transitionen zwischen den Zust‰nden, und Emissionen.",
+	        "Zusammenfassend betrachtet hat ein HMM verschiedene Zust√§nde, Transitionen zwischen den Zust√§nden, und Emissionen.",
 	        "description5", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5",
 	        AnimalScript.DIRECTION_NW),
@@ -273,15 +273,15 @@ public class BackwardGenerator {
 	        "description3", null, headlineProps);
 	    lang.newText(new Offset(0, 25, "description3",
 	        AnimalScript.DIRECTION_NW),
-	        "1. Initialisierung des Wahrscheinlichkeitsvektors (f¸r die Zust‰nde des HMM) mit b_i(T+1) = 1 (100%, da noch kein Zeichen beobachtet wurde)",
+	        "1. Initialisierung des Wahrscheinlichkeitsvektors (f√ºr die Zust√§nde des HMM) mit b_i(T+1) = 1 (100%, da noch kein Zeichen beobachtet wurde)",
 	        "description4", null, textProps);
 	    lang.newText(new Offset(0, 25, "description4",
 	        AnimalScript.DIRECTION_NW),
-	        "2. Bilde die Summe ¸ber die Wahrscheinlichkeiten aus jedem Zustand das n‰chste Symbol zu beobachten.",
+	        "2. Bilde die Summe √ºber die Wahrscheinlichkeiten aus jedem Zustand das n√§chste Symbol zu beobachten.",
 	        "description5", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5",
 	        AnimalScript.DIRECTION_NW),
-	        "Hierf¸r werden die Transitionswahrscheinlichkeiten zwischen den Zust‰nden und der Wahrscheinlichkeitsvektor zum vorherigen Zustand genommen.",
+	        "Hierf√ºr werden die Transitionswahrscheinlichkeiten zwischen den Zust√§nden und der Wahrscheinlichkeitsvektor zum vorherigen Zustand genommen.",
 	        "description6", null, textProps);
 	    lang.newText(new Offset(0, 25, "description6",
 	        AnimalScript.DIRECTION_NW),
@@ -294,7 +294,7 @@ public class BackwardGenerator {
 	    lang.nextStep();
 	    lang.hideAllPrimitives();
 	    
-	    //TODO beispielgraph zeichnen und erl‰utern
+	    //TODO beispielgraph zeichnen und erl√§utern
 	    GraphGenerator graphGen;
 	    GraphProperties graphProps = new GraphProperties();
 	    graphProps.set(AnimationPropertiesKeys.DIRECTED_PROPERTY, true);
