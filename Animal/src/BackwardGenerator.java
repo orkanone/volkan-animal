@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.text.DecimalFormat;
 
 import algoanim.primitives.*;
 import algoanim.primitives.generators.AnimationType;
@@ -26,6 +27,11 @@ public class BackwardGenerator {
 	private Language lang = Language.getLanguageInstance(AnimationType.ANIMALSCRIPT,
 			"HMM Backward Algorithm", "Volker Hartmann & Orkan Özyurt", 640, 480);
 	
+	
+	private double roundDouble(double num){
+		return (long) (num * 1e5) / 1e5;
+	}
+	
 	private void computeProbabilities(double[][] T, double[][] B, int[] input){
 		lang.setStepMode(true); //schrittmodus aktivieren
 		
@@ -40,21 +46,26 @@ public class BackwardGenerator {
 		ap.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
 		ap.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
 	    ap.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
+	    ap.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 16));
 	    
 	    this.generateLabelsAndHeadline();
 	    
 		//Primitives to display
+	    
 		//data structures that remain unchanged
 		DoubleMatrix Tr = lang.newDoubleMatrix(new Coordinates(60, 55), T, "Transitions", null, mp);
 		DoubleMatrix Br = lang.newDoubleMatrix(new Coordinates(200, 55), B, "Emissions", null, mp);
-		IntArray sequence = lang.newIntArray(new Coordinates(180, 400), input, "Input Sequence", null, ap);
+		IntArray sequence = lang.newIntArray(new Coordinates(350, 120), input, "Input Sequence", null, ap);
+		
 		//CHANGING data structures
-		DoubleArray bi = lang.newDoubleArray(new Coordinates(20, 180), b_i, "Backward Probabilities", null, ap);
-		DoubleArray result = lang.newDoubleArray(new Coordinates(20, 240), output, "Current Result", null, ap);
-		DoubleArray mult_helper = lang.newDoubleArray(new Coordinates(20, 300), helper, 
-										"Matrix Multiplication Helper", null, ap);
+
+		DoubleArray bi = lang.newDoubleArray(new Coordinates(45, 400), b_i, "Backward Probabilities", null, ap);
+		DoubleArray mult_helper = lang.newDoubleArray(new Coordinates(45, 340), helper, 
+				"Matrix Multiplication Helper", null, ap);
+		DoubleArray result = lang.newDoubleArray(new Coordinates(45, 280), output, "Current Result", null, ap);
 		
 		//TODO change helper and result Array to Matrix?
+		//TODO round results
 		
 		// Create two markers to point on i and j
 	    sequenceCounter = input.length-1;
@@ -71,7 +82,7 @@ public class BackwardGenerator {
 	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
 	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
 
-	    src = lang.newSourceCode(new Coordinates(390, 50), "sourceCode",
+	    src = lang.newSourceCode(new Coordinates(450, 180), "sourceCode",
 		        null, sourceCodeProps);
 	    generateSourceCode();
 	    
@@ -81,13 +92,13 @@ public class BackwardGenerator {
 			seqenceMarker.move(sequenceCounter, null, defaultTiming);
 			
 			lang.nextStep();
-			//TODO WHY is highlighting so fucked up? Example: Step 15: 0.3
+
 			for(int j = 0; j < Br.getNrRows(); j++){
 				src.highlight(4);
 				lang.nextStep();
 				src.unhighlight(4);
 				//helper[j] = bi.getData(j) * Br.getElement(j, seq_in);
-				mult_helper.put(j, bi.getData(j) * Br.getElement(j, seq_in), null, null);
+				mult_helper.put(j, this.roundDouble(bi.getData(j) * Br.getElement(j, seq_in)), null, null);
 				//highlight cells of matrix multiplication
 				mult_helper.highlightElem(j, null, null);
 				bi.highlightCell(j, null, null);
@@ -125,7 +136,7 @@ public class BackwardGenerator {
 					lang.nextStep();
 					src.unhighlight(13);
 					src.highlight(14);
-					result.put(m, (result.getData(m) + Tr.getElement(m,n) * mult_helper.getData(n)), null, null);
+					result.put(m, roundDouble(result.getData(m) + Tr.getElement(m,n) * mult_helper.getData(n)), null, null);
 					result.highlightElem(m, null, null);
 					Tr.highlightCell(m, n, null, null);
 					mult_helper.highlightCell(n, null, null);
@@ -137,7 +148,7 @@ public class BackwardGenerator {
 				}	
 			}
 			
-			for(int n = 0; n < result.getLength(); n++){
+			for(int n = 0; n < bi.getLength(); n++){
 				bi.put(n, result.getData(n), null, null);
 			}
 			
@@ -182,12 +193,17 @@ public class BackwardGenerator {
 	    Text headline = lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
 	    								"Headline", null, textprops);
 
-	    //Labels for primitives
+	    //Labels for inputs
 	    TextProperties labelprops = new TextProperties();
 	    labelprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 14));
 	    Text TrLabel = lang.newText(new Coordinates(25,65), "A = ", "Label A", null, labelprops);
 	    //Aus irgendeinem Grund nicht auf gleicher Höhe bei gleicher Y-Koordinate
 	    Text BLabel = lang.newText(new Coordinates(165,69), "B = ", "Label B", null, labelprops);
+	    
+	    //Labels for outputs
+	    Text helperLabel = lang.newText(new Coordinates(50, 260), "Zwischenergebnis:", "helper", null, labelprops);
+	    Text resultLabel = lang.newText(new Coordinates(50,320), "Ergebnis:", "Result", null, labelprops);
+	    Text bLabel = lang.newText(new Coordinates(50, 380), "Backward-Wahrscheinlichkeiten:", "blabel", null, labelprops);
 	}
 	
 	
