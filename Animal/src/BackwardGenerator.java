@@ -2,16 +2,20 @@ import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
 
+import algoanim.animalscript.AnimalScript;
 import algoanim.primitives.*;
 import algoanim.primitives.generators.AnimationType;
+import algoanim.primitives.generators.GraphGenerator;
 import algoanim.primitives.generators.Language;
 import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.ArrayMarkerProperties;
 import algoanim.properties.ArrayProperties;
+import algoanim.properties.GraphProperties;
 import algoanim.properties.MatrixProperties;
 import algoanim.properties.SourceCodeProperties;
 import algoanim.properties.TextProperties;
 import algoanim.util.Coordinates;
+import algoanim.util.Offset;
 import algoanim.util.TicksTiming;
 import algoanim.util.Timing;
 
@@ -34,6 +38,9 @@ public class BackwardGenerator {
 	
 	private void computeProbabilities(double[][] T, double[][] B, int[] input){
 		lang.setStepMode(true); //schrittmodus aktivieren
+		
+		//generate the algorithm description pages
+		this.generateDescription();
 		
 		//Set Display Properties for Matrix and Array
 		MatrixProperties mp = new MatrixProperties();
@@ -204,6 +211,96 @@ public class BackwardGenerator {
 	    Text helperLabel = lang.newText(new Coordinates(50, 260), "Zwischenergebnis:", "helper", null, labelprops);
 	    Text resultLabel = lang.newText(new Coordinates(50,320), "Ergebnis:", "Result", null, labelprops);
 	    Text bLabel = lang.newText(new Coordinates(50, 380), "Backward-Wahrscheinlichkeiten:", "blabel", null, labelprops);
+	}
+	
+	private void generateDescription(){
+		TextProperties headlineProps = new TextProperties();
+		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 16));
+		TextProperties headlineLargeProps = new TextProperties();
+		headlineLargeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 18));
+		
+		lang.newText(new Coordinates(10, 20),
+		        "Intro: Hidden Markov Modell (HMM)",
+		        "hmm_headline", null, headlineLargeProps);
+		
+		TextProperties textProps = new TextProperties();
+	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+	        Font.SANS_SERIF, Font.PLAIN, 16));
+	    lang.newText(new Coordinates(10, 100),
+	        "Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph mit Übergangswahrscheinlichkeiten betrachtet werden.",
+	        "description1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description1",
+	        AnimalScript.DIRECTION_NW),
+	        "Hidden bedeutet in dem Sinne, dass die Zustände von außen nicht beobachtbar sind.",
+	        "description2", null, textProps);
+	    lang.newText(new Offset(0, 25, "description2",
+	        AnimalScript.DIRECTION_NW),
+	        "Stattdessen hat jeder Zustand beobachtbare Ausgabesymbole (Emissionen).",
+	        "description3", null, textProps);
+	    lang.newText(new Offset(0, 25, "description3",
+	        AnimalScript.DIRECTION_NW),
+	        "Jede Emission kann aus jedem Zustand mit einer bestimmten Wahrscheinlichkeit auftreten.",
+	        "description4", null, textProps);
+	    lang.newText(new Offset(0, 25, "description4",
+	        AnimalScript.DIRECTION_NW),
+	        "Zusammenfassend betrachtet hat ein HMM verschiedene Zustände, Transitionen zwischen den Zuständen, und Emissionen.",
+	        "description5", null, textProps);
+	    lang.newText(new Offset(0, 25, "description5",
+	        AnimalScript.DIRECTION_NW),
+	        "Transitionen und Emissionen sind dabei mit Wahrscheinlichkeiten versehen und entsprechen einem stochastischen Modell (Summe der ausgehenden Wahrscheinlichkeiten ist 1)",
+	        "description6", null, textProps);
+
+	    lang.nextStep();		
+	    lang.hideAllPrimitives();
+
+	    lang.newText(new Coordinates(10, 20),
+		        "Intro: Backward Algorithmus",
+		        "bwalg_headline", null, headlineLargeProps);
+	    lang.newText(new Coordinates(10, 100),
+	        "Der Backward Algorithmus berechnet die Wahrscheinlichkeit, eine bestimmte Sequenz in einem gegebenen Hidden-Markov-Model zu beobachten.",
+	        "description1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description1",
+	        AnimalScript.DIRECTION_NW),
+	        "Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann (Emissionen).",
+	        "description2", null, textProps);
+
+	    lang.nextStep();
+	    lang.newText(new Offset(0, 25, "description2",
+	        AnimalScript.DIRECTION_NW),
+	        "Ablauf",
+	        "description3", null, headlineProps);
+	    lang.newText(new Offset(0, 25, "description3",
+	        AnimalScript.DIRECTION_NW),
+	        "1. Initialisierung des Wahrscheinlichkeitsvektors (für die Zustände des HMM) mit b_i(T+1) = 1 (100%, da noch kein Zeichen beobachtet wurde)",
+	        "description4", null, textProps);
+	    lang.newText(new Offset(0, 25, "description4",
+	        AnimalScript.DIRECTION_NW),
+	        "2. Bilde die Summe über die Wahrscheinlichkeiten aus jedem Zustand das nächste Symbol zu beobachten.",
+	        "description5", null, textProps);
+	    lang.newText(new Offset(0, 25, "description5",
+	        AnimalScript.DIRECTION_NW),
+	        "Hierfür werden die Transitionswahrscheinlichkeiten zwischen den Zuständen und der Wahrscheinlichkeitsvektor zum vorherigen Zustand genommen.",
+	        "description6", null, textProps);
+	    lang.newText(new Offset(0, 25, "description6",
+	        AnimalScript.DIRECTION_NW),
+	        "3. Terminiere, sobald die Sequenz komplett eingelesen wurde (am ersten Zeichen angelangt).",
+	        "description7", null, textProps);
+	    lang.newText(new Offset(0, 25, "description7",
+	        AnimalScript.DIRECTION_NW),
+	        "Der Wahrscheinlichkeitsvektor gibt nun an, mit welcher Wahrscheinlichkeit man nach der Sequenz im jeweiligen Zustand landet.",
+	        "description8", null, textProps);
+	    lang.nextStep();
+	    lang.hideAllPrimitives();
+	    
+	    //TODO beispielgraph zeichnen und erläutern
+	    GraphGenerator graphGen;
+	    GraphProperties graphProps = new GraphProperties();
+	    graphProps.set(AnimationPropertiesKeys.DIRECTED_PROPERTY, true);
+	    graphProps.set(AnimationPropertiesKeys.WEIGHTED_PROPERTY, true);
+	    
+	    //Graph hmmGraph = new Graph(graphGen, null, null, graphProps);
 	}
 	
 	
