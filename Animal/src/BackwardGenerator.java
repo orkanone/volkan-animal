@@ -164,6 +164,12 @@ public class BackwardGenerator {
 			src.unhighlight(18);
 		}
 
+		Tr.hide();
+		Br.hide();
+		
+		for(int i = 0; i < output.length; i++) output[i] = bi.getData(i);
+		
+		generateSummary();
 		System.out.println(lang.toString());
 	}
 	
@@ -301,6 +307,54 @@ public class BackwardGenerator {
 	    graphProps.set(AnimationPropertiesKeys.WEIGHTED_PROPERTY, true);
 	    
 	    //Graph hmmGraph = new Graph(graphGen, null, null, graphProps);
+	}
+	
+	private void generateSummary(){
+	    lang.hideAllPrimitives();
+	    
+		TextProperties headlineProps = new TextProperties();
+		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 16));
+		TextProperties headlineLargeProps = new TextProperties();
+		headlineLargeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 18));
+		
+		String output_string = "";
+		for(int i = 0; i < output.length; i++) output_string += "Zustand " + (i) + ": " + output[i] + " ";
+		
+		lang.newText(new Coordinates(10, 20),
+		        "Zusammenfassung (Ende des Algorithmus)",
+		        "hmm_headline", null, headlineLargeProps);
+		
+		TextProperties textProps = new TextProperties();
+	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+	        Font.SANS_SERIF, Font.PLAIN, 16));
+	    lang.newText(new Coordinates(10, 100),
+	        "Die Sequenz wurde nun Komplett verarbeitet und der Algorithmus ist am Ende angelangt.",
+	        "description1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description1",
+	        AnimalScript.DIRECTION_NW),
+	        "Die Werte des Vektors/Arrays 'Backward-Wahrscheinlichkeiten' am Ende geben an,",
+	        "description2", null, textProps);
+	    lang.newText(new Offset(0, 25, "description2",
+	        AnimalScript.DIRECTION_NW),
+	        "mit welcher Wahrscheinlichkeit die gegebene Sequenz im gegebenen HMM beobachtet werden kann.",
+	        "description3", null, textProps);
+	    lang.newText(new Offset(0, 25, "description3",
+	        AnimalScript.DIRECTION_NW),
+	        "In unserem Fall betragen die Wahrscheinlichkeiten: ",
+	        "description4", null, textProps);
+	    lang.newText(new Offset(0, 25, "description4",
+	        AnimalScript.DIRECTION_NW),
+	        output_string,
+	        "description5", null, textProps);
+	    lang.newText(new Offset(0, 25, "description5",
+	        AnimalScript.DIRECTION_NW),
+	        "Dies sind die Wahrscheinlichkeiten nach Durchlaufen der Sequenz in einem der Zustände des HMM zu sein.",
+	        "description6", null, textProps);
+
+	    lang.nextStep();		
+	    lang.hideAllPrimitives();
 	}
 	
 	
