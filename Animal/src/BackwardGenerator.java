@@ -23,7 +23,8 @@ import algoanim.util.Timing;
 public class BackwardGenerator {
 	
 	//TODO for dynamic sizes of matrix b_i has to check how many states there are; variable numberOfStates for example
-	private double b_i[] = {1, 1}; //start vector
+	//private double b_i[] = {1, 1}; //start vector
+	private double start_vector[][] = {{1},{1}};
 	private double helper[] = {0, 0}; //
 	private double output[] = {0, 0};
 	private int sequenceCounter;
@@ -65,14 +66,15 @@ public class BackwardGenerator {
 		IntArray sequence = lang.newIntArray(new Coordinates(350, 120), input, "Input Sequence", null, ap);
 		
 		//CHANGING data structures
-
-		DoubleArray bi = lang.newDoubleArray(new Coordinates(45, 400), b_i, "Backward Probabilities", null, ap);
+		
+		
+		DoubleMatrix probs = lang.newDoubleMatrix(new Coordinates(45, 400), start_vector,"BackwardProbabilities", null, mp);
 		DoubleArray mult_helper = lang.newDoubleArray(new Coordinates(45, 340), helper, 
 				"Matrix Multiplication Helper", null, ap);
 		DoubleArray result = lang.newDoubleArray(new Coordinates(45, 280), output, "Current Result", null, ap);
 		
+		
 		//TODO change helper and result Array to Matrix?
-		//TODO round results
 		
 		// Create two markers to point on i and j
 	    sequenceCounter = input.length-1;
@@ -104,18 +106,21 @@ public class BackwardGenerator {
 				src.highlight(4);
 				lang.nextStep();
 				src.unhighlight(4);
-				//helper[j] = bi.getData(j) * Br.getElement(j, seq_in);
-				mult_helper.put(j, this.roundDouble(bi.getData(j) * Br.getElement(j, seq_in)), null, null);
-				//highlight cells of matrix multiplication
+				
+				//mult_helper.put(j, this.roundDouble(bi.getData(j) * Br.getElement(j, seq_in)), null, null);
+				mult_helper.put(j, this.roundDouble(probs.getElement(j, 0) * Br.getElement(j, seq_in)), null, null);
+				
 				mult_helper.highlightElem(j, null, null);
-				bi.highlightCell(j, null, null);
+				//bi.highlightCell(j, null, null);
+				probs.highlightElem(j, 0, null, null);
 				Br.highlightCell(j, seq_in, null, null);
 				src.highlight(5);
 				//result of first matrix mult
 				lang.nextStep();
 				//unhighlight all cells
 				mult_helper.unhighlightElem(j, null, null);
-				bi.unhighlightCell(j, null, null);
+
+				probs.unhighlightElem(j, 0, null, null);
 				Br.unhighlightCell(j, seq_in, null, null);
 				src.unhighlight(5);
 			}
@@ -155,8 +160,10 @@ public class BackwardGenerator {
 				}	
 			}
 			
-			for(int n = 0; n < bi.getLength(); n++){
-				bi.put(n, result.getData(n), null, null);
+			//for(int n = 0; n < bi.getLength(); n++){
+			for(int n = 0; n < probs.getNrRows(); n++){
+				//bi.put(n, result.getData(n), null, null);
+				probs.put(n, 0, result.getData(n), null, null);
 			}
 			
 			src.highlight(18);
@@ -167,7 +174,8 @@ public class BackwardGenerator {
 		Tr.hide();
 		Br.hide();
 		
-		for(int i = 0; i < output.length; i++) output[i] = bi.getData(i);
+		//for(int i = 0; i < output.length; i++) output[i] = bi.getData(i);
+		for(int i = 0; i < output.length; i++) output[i] = probs.getElement(i, 0);
 		
 		generateSummary();
 		System.out.println(lang.toString());
@@ -203,20 +211,20 @@ public class BackwardGenerator {
 	    TextProperties textprops = new TextProperties();
 	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
 	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
-	    Text headline = lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
 	    								"Headline", null, textprops);
 
 	    //Labels for inputs
 	    TextProperties labelprops = new TextProperties();
 	    labelprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 14));
-	    Text TrLabel = lang.newText(new Coordinates(25,65), "A = ", "Label A", null, labelprops);
+	    lang.newText(new Coordinates(25,65), "A = ", "Label A", null, labelprops);
 	    //Aus irgendeinem Grund nicht auf gleicher Höhe bei gleicher Y-Koordinate
-	    Text BLabel = lang.newText(new Coordinates(165,69), "B = ", "Label B", null, labelprops);
+	    lang.newText(new Coordinates(165,69), "B = ", "Label B", null, labelprops);
 	    
 	    //Labels for outputs
-	    Text helperLabel = lang.newText(new Coordinates(50, 260), "Zwischenergebnis:", "helper", null, labelprops);
-	    Text resultLabel = lang.newText(new Coordinates(50,320), "Ergebnis:", "Result", null, labelprops);
-	    Text bLabel = lang.newText(new Coordinates(50, 380), "Backward-Wahrscheinlichkeiten:", "blabel", null, labelprops);
+	    lang.newText(new Coordinates(50, 260), "Zwischenergebnis:", "helper", null, labelprops);
+	    lang.newText(new Coordinates(50,320), "Ergebnis:", "Result", null, labelprops);
+	    lang.newText(new Coordinates(50, 380), "Backward-Wahrscheinlichkeiten:", "blabel", null, labelprops);
 	}
 	
 	private void generateDescription(){
