@@ -60,7 +60,7 @@
 				<name>name</name>
 				<isEditable value="true" />
 				<label></label>
-				<value><String>matrix properties</String></value>
+				<value><String>matrixproperties</String></value>
 			</AnimationPropertyItem>
 			<AnimationPropertyItem type="EnumerationPropertyItem">
 				<name>style</name>
@@ -126,7 +126,7 @@
 				<name>name</name>
 				<isEditable value="true" />
 				<label></label>
-				<value><String>array properties</String></value>
+				<value><String>arrayproperties</String></value>
 			</AnimationPropertyItem>
 			<AnimationPropertyItem type="BooleanPropertyItem">
 				<name>filled</name>
@@ -188,7 +188,7 @@
 				<name>name</name>
 				<isEditable value="true" />
 				<label></label>
-				<value><String>arrayMarker properties</String></value>
+				<value><String>arrayMarkerproperties</String></value>
 			</AnimationPropertyItem>
 			<AnimationPropertyItem type="BooleanPropertyItem">
 				<name>short</name>

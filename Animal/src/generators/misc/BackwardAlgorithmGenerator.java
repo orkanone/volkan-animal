@@ -52,22 +52,26 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
     private int[] inputsequence;
 
     public BackwardAlgorithmGenerator() {
-    	lang = new AnimalScript("Backward-Algorithmus (Hidden Markov Models)", "Volker Hartmann, Orkan Özyurt", 800, 600);
-    	lang.setStepMode(true); //schrittmodus aktivieren
+
     }
     
     public void init(){
+    	lang = new AnimalScript("Backward-Algorithmus (Hidden Markov Models)", "Volker Hartmann, Orkan Özyurt", 800, 600);
+    	lang.setStepMode(true); //schrittmodus aktivieren
     }
 
     public String generate(AnimationPropertiesContainer props,Hashtable<String, Object> primitives) {
-        //Inputs abfangen ""
+
+        //generate the algorithm description pages
+  		this.generateDescription();
+  		
+    	//Inputs abfangen ""
     	arrayIMProps = (ArrayMarkerProperties)props.getPropertiesByName("arrayMarkerproperties");
         ap = (ArrayProperties)props.getPropertiesByName("arrayproperties");
         mp = (MatrixProperties)props.getPropertiesByName("matrixproperties");
         inputsequence = (int[])primitives.get("inputsequence");
         
-		//generate the algorithm description pages
-		this.generateDescription();
+
 		
 		//Set Display Properties for Matrix and Array
 		mp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
@@ -200,14 +204,17 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 
 		Tr.hide();
 		Br.hide();
+		probs.hide();
 		
 		//for(int i = 0; i < output.length; i++) output[i] = bi.getData(i);
 		for(int i = 0; i < output.length; i++) output[i] = probs.getElement(i, 0);
 		
 		generateSummary();
-        
+     
         return lang.toString();
     }
+    
+    //TODO Klassen Slide,InfoBox, Code aus Package algoanim.animalscript.addons benutzen
     
     private void generateDescription(){
 		TextProperties headlineProps = new TextProperties();
