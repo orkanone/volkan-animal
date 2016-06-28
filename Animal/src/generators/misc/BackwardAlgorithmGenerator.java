@@ -357,25 +357,25 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	private void generateSourceCode(){
 		//TODO Add Small headline? "Backward Algorithmus" 
 		src.addCodeLine("private void backward(double b_i[], int input_index){", null, 0, null); // 0
-		src.addCodeLine("	if(input_index >= 0){", null, 1, null); // 1
-	    src.addCodeLine("		int input = input_sequence[input_index];", null, 1, null); // 2
-	    src.addCodeLine("		//Multipliziere momentane Zustands- mit Emissionswahrscheinlichkeiten", null, 1, null); // 3
-	    src.addCodeLine("		for(int j = 0; j < B[0].length; j++){", null, 1, null); // 4
-	    src.addCodeLine("			helper[j] = b_i[j] * B[j][input];", null, 1, null); // 5
-	    src.addCodeLine("		}", null, 1, null); // 6
-	    src.addCodeLine("		//initialisiere ergebnisarray für matrix multiplikation", null, 1, null); // 7
-	    src.addCodeLine("		for(int n = 0; n < output.length; n++){", null, 2, null); // 8
-	    src.addCodeLine("			output[n] = 0;", null, 2, null); // 9
-	    src.addCodeLine("		}", null, 2, null); // 10
-	    src.addCodeLine("		// Zustandsübergang: multipliziere current emission mit Transitionsmatrix", null, 2, null); // 11
-	    src.addCodeLine("		for(int m = 0; m < T[0].length; m++){", null, 2, null); // 12
-	    src.addCodeLine("			for(int n = 0; n < T[0].length; n++){", null, 2, null); // 13
-	    src.addCodeLine("				output[m] += T[m][n] * helper[n];", null, 2, null); // 14
-	    src.addCodeLine("			}", null, 2, null); // 15
-	    src.addCodeLine("		}", null, 2, null); // 16
-	    src.addCodeLine("	}", null, 2, null); // 17
-	    src.addCodeLine("	backward(output, input_index-1);", null, 1, null); // 18
-	    src.addCodeLine("}", null, 1, null); // 19	
+		src.addCodeLine("if(input_index >= 0){", null, 2, null); // 1
+	    src.addCodeLine("int input = input_sequence[input_index];", null, 4, null); // 2
+	    src.addCodeLine("//Multipliziere momentane Zustands- mit Emissionswahrscheinlichkeiten", null, 4, null); // 3
+	    src.addCodeLine("for(int j = 0; j < B[0].length; j++){", null, 4, null); // 4
+	    src.addCodeLine("helper[j] = b_i[j] * B[j][input];", null, 6, null); // 5
+	    src.addCodeLine("}", null, 4, null); // 6
+	    src.addCodeLine("//initialisiere ergebnisarray für matrix multiplikation", null, 4, null); // 7
+	    src.addCodeLine("for(int n = 0; n < output.length; n++){", null, 4, null); // 8
+	    src.addCodeLine("output[n] = 0;", null, 6, null); // 9
+	    src.addCodeLine("}", null, 4, null); // 10
+	    src.addCodeLine("// Zustandsübergang: multipliziere current emission mit Transitionsmatrix", null, 4, null); // 11
+	    src.addCodeLine("for(int m = 0; m < T[0].length; m++){", null, 4, null); // 12
+	    src.addCodeLine("for(int n = 0; n < T[0].length; n++){", null, 6, null); // 13
+	    src.addCodeLine("output[m] += T[m][n] * helper[n];", null, 8, null); // 14
+	    src.addCodeLine("}", null, 6, null); // 15
+	    src.addCodeLine("}", null, 4, null); // 16
+	    src.addCodeLine("}", null, 2, null); // 17
+	    src.addCodeLine("backward(output, input_index-1);", null, 2, null); // 18
+	    src.addCodeLine("}", null, 0, null); // 19	
 	}
 	
 	public void generateLabelsAndHeadline(){
