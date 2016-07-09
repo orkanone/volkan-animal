@@ -224,86 +224,119 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 		headlineLargeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 		        Font.SANS_SERIF, Font.BOLD, 18));
 		
-		lang.newText(new Coordinates(10, 20),
+		TextProperties textprops = new TextProperties();
+	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
+	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
+	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    								"Headline", null, textprops);
+		
+		lang.newText(new Coordinates(10, 50),
 		        "Intro: Hidden Markov Modell (HMM)",
-		        "hmm_headline", null, headlineLargeProps);
+		        "hmm_headline", null, headlineProps);
 		
 		TextProperties textProps = new TextProperties();
 	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 	        Font.SANS_SERIF, Font.PLAIN, 16));
 	    lang.newText(new Coordinates(10, 100),
-	        "Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph mit Übergangswahrscheinlichkeiten betrachtet werden.",
-	        "description1", null, textProps);
-	    lang.newText(new Offset(0, 25, "description1",
+	        "Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph",
+	        "description0", null, textProps);
+	    lang.newText(new Offset(0, 25, "description0",
+		    AnimalScript.DIRECTION_NW),
+		    "mit Übergangswahrscheinlichkeiten betrachtet werden.",
+		    "description1", null, textProps);
+	    lang.newText(new Offset(0, 35, "description1",
 	        AnimalScript.DIRECTION_NW),
 	        "Hidden bedeutet in dem Sinne, dass die Zustände von außen nicht beobachtbar sind.",
 	        "description2", null, textProps);
-	    lang.newText(new Offset(0, 25, "description2",
+	    lang.newText(new Offset(0, 35, "description2",
 	        AnimalScript.DIRECTION_NW),
 	        "Stattdessen hat jeder Zustand beobachtbare Ausgabesymbole (Emissionen).",
 	        "description3", null, textProps);
-	    lang.newText(new Offset(0, 25, "description3",
+	    lang.newText(new Offset(0, 35, "description3",
 	        AnimalScript.DIRECTION_NW),
 	        "Jede Emission kann aus jedem Zustand mit einer bestimmten Wahrscheinlichkeit auftreten.",
 	        "description4", null, textProps);
-	    lang.newText(new Offset(0, 25, "description4",
+	    lang.newText(new Offset(0, 50, "description4",
 	        AnimalScript.DIRECTION_NW),
-	        "Zusammenfassend betrachtet hat ein HMM verschiedene Zustände, Transitionen zwischen den Zuständen, und Emissionen.",
+	        "Zusammenfassend betrachtet hat ein HMM verschiedene Zustände,",
 	        "description5", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5",
+		        AnimalScript.DIRECTION_NW),
+		        "Transitionen zwischen den Zuständen, und Emissionen.",
+		        "description6", null, textProps);
+	    lang.newText(new Offset(0, 35, "description6",
 	        AnimalScript.DIRECTION_NW),
-	        "Transitionen und Emissionen sind dabei mit Wahrscheinlichkeiten versehen und entsprechen einem stochastischen Modell (Summe der ausgehenden Wahrscheinlichkeiten ist 1)",
-	        "description6", null, textProps);
+	        "Transitionen und Emissionen sind dabei mit Wahrscheinlichkeiten versehen",
+	        "description7", null, textProps);
+	    lang.newText(new Offset(0, 25, "description7",
+		    AnimalScript.DIRECTION_NW),
+		    "und entsprechen einem stochastischen Modell (Summe der ausgehenden Wahrscheinlichkeiten ist 1)",
+		    "description8", null, textProps);
 
 	    lang.nextStep();		
 	    lang.hideAllPrimitives();
 
-	    lang.newText(new Coordinates(10, 20),
+	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    								"Headline", null, textprops);
+	    
+	    lang.newText(new Coordinates(10, 50),
 		        "Intro: Backward Algorithmus",
-		        "bwalg_headline", null, headlineLargeProps);
+		        "bwalg_headline", null, headlineProps);
 	    lang.newText(new Coordinates(10, 100),
-	        "Der Backward Algorithmus berechnet die Wahrscheinlichkeit, eine bestimmte Sequenz in einem gegebenen Hidden-Markov-Model zu beobachten.",
-	        "description1", null, textProps);
-	    lang.newText(new Offset(0, 25, "description1",
+	        "Der Backward Algorithmus berechnet die Wahrscheinlichkeit,",
+	        "description0", null, textProps);
+	    lang.newText(new Offset(0, 25, "description0",
+		    AnimalScript.DIRECTION_NW),
+		    "eine bestimmte Sequenz in einem gegebenen Hidden-Markov-Model zu beobachten.",
+		    "description1", null, textProps);
+	    lang.newText(new Offset(0, 35, "description1",
 	        AnimalScript.DIRECTION_NW),
 	        "Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann (Emissionen).",
 	        "description2", null, textProps);
 
 	    lang.nextStep();
-	    lang.newText(new Offset(0, 25, "description2",
+	    lang.newText(new Offset(0, 50, "description2",
 	        AnimalScript.DIRECTION_NW),
 	        "Ablauf",
-	        "description3", null, headlineProps);
-	    lang.newText(new Offset(0, 25, "description3",
+	        "description3_1", null, headlineProps);
+	    lang.newText(new Offset(0, 35, "description3_1",
 	        AnimalScript.DIRECTION_NW),
-	        "1. Initialisierung des Wahrscheinlichkeitsvektors (für die Zustände des HMM) mit b_i(T+1) = 1 (100%, da noch kein Zeichen beobachtet wurde)",
-	        "description4", null, textProps);
-	    lang.newText(new Offset(0, 25, "description4",
+	        "1. Initialisierung des Wahrscheinlichkeitsvektors (für die Zustände des HMM)",
+	        "description4_1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description4_1",
+		        AnimalScript.DIRECTION_NW),
+		        "mit b_i(T+1) = 1 (100%, da noch kein Zeichen beobachtet wurde).",
+		        "description4_2", null, textProps);
+	    lang.newText(new Offset(0, 35, "description4_2",
 	        AnimalScript.DIRECTION_NW),
 	        "2. Bilde die Summe über die Wahrscheinlichkeiten aus jedem Zustand das nächste Symbol zu beobachten.",
-	        "description5", null, textProps);
-	    lang.newText(new Offset(0, 25, "description5",
+	        "description5_1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description5_1",
 	        AnimalScript.DIRECTION_NW),
-	        "Hierfür werden die Transitionswahrscheinlichkeiten zwischen den Zuständen und der Wahrscheinlichkeitsvektor zum vorherigen Zustand genommen.",
-	        "description6", null, textProps);
-	    lang.newText(new Offset(0, 25, "description6",
+	        "Hierfür werden die Transitionswahrscheinlichkeiten zwischen den Zuständen,",
+	        "description6_1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description6_1",
+		    AnimalScript.DIRECTION_NW),
+		    "der Wahrscheinlichkeitsvektor aus dem vorgehenden Durchgang,",
+		    "description6_2", null, textProps);
+	    lang.newText(new Offset(0, 25, "description6_2",
+			AnimalScript.DIRECTION_NW),
+			"und die Emissionswahrscheinlichkeit für das beobachtete Symbol multipliziert (Matrizen).",
+			"description6_3", null, textProps);
+	    lang.newText(new Offset(0, 35, "description6_3",
 	        AnimalScript.DIRECTION_NW),
-	        "3. Terminiere, sobald die Sequenz komplett eingelesen wurde (am ersten Zeichen angelangt).",
-	        "description7", null, textProps);
-	    lang.newText(new Offset(0, 25, "description7",
+	        "3. Terminiere, sobald die Sequenz komplett eingelesen wurde.",
+	        "description7_1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description7_1",
 	        AnimalScript.DIRECTION_NW),
-	        "Der Wahrscheinlichkeitsvektor gibt nun an, mit welcher Wahrscheinlichkeit man nach der Sequenz im jeweiligen Zustand landet.",
-	        "description8", null, textProps);
+	        "Der Wahrscheinlichkeitsvektor gibt nun an, mit welcher Wahrscheinlichkeit",
+	        "description8_1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description8_1",
+		    AnimalScript.DIRECTION_NW),
+		    "man nach Einlesen der Sequenz im jeweiligen Zustand landet.",
+		    "description9", null, textProps);
 	    lang.nextStep();
 	    lang.hideAllPrimitives();
-	    
-	    //TODO beispielgraph zeichnen und erläutern
-	    GraphGenerator graphGen;
-	    GraphProperties graphProps = new GraphProperties();
-	    graphProps.set(AnimationPropertiesKeys.DIRECTED_PROPERTY, true);
-	    graphProps.set(AnimationPropertiesKeys.WEIGHTED_PROPERTY, true);
-	    
-	    //Graph hmmGraph = new Graph(graphGen, null, null, graphProps);
 	}
 	
 	private void generateSummary(){
@@ -350,8 +383,8 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	        "Dies sind die Wahrscheinlichkeiten nach Durchlaufen der Sequenz in einem der Zustände des HMM zu sein.",
 	        "description6", null, textProps);
 
-	    lang.nextStep();		
-	    lang.hideAllPrimitives();
+	    //lang.nextStep();		
+	    //lang.hideAllPrimitives();
 	}
     
 	private void generateSourceCode(){
