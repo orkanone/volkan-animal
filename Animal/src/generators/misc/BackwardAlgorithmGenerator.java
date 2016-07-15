@@ -27,9 +27,12 @@ import java.util.Hashtable;
 
 import generators.framework.properties.AnimationPropertiesContainer;
 import algoanim.animalscript.AnimalScript;
+import algoanim.counter.model.TwoValueCounter;
+import algoanim.counter.view.TwoValueView;
 import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.ArrayMarkerProperties;
 import algoanim.properties.ArrayProperties;
+import algoanim.properties.CounterProperties;
 import algoanim.properties.GraphProperties;
 import algoanim.properties.MatrixProperties;
 import algoanim.properties.SourceCodeProperties;
@@ -127,6 +130,19 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	    src = lang.newSourceCode(new Coordinates(450, 180), "sourceCode",
 		        null, sourceCodeProps);
 	    this.generateSourceCode();
+	    
+	    TwoValueCounter counter = lang.newCounter(mult_helper); // Zaehler anlegen
+	    CounterProperties cp = new CounterProperties(); // Zaehler-Properties anlegen
+	    cp.set(AnimationPropertiesKeys.FILLED_PROPERTY, true); // gefuellt...
+	    cp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.BLUE); // ...mit Blau
+	    // view anlegen, Parameter:
+	    // 1. Counter
+	    // 2. linke obere Ecke (kann auch Offset nutzen!)
+	    // 3. CounterProperties
+	    // 4. Anzeige Zaehlerwert als Zahl?
+	    // 5. Anzeige Zaehlerwert als Balken?
+	    // Alternativ: nur Angabe Counter, Koordinate und Propertie
+	    TwoValueView view = lang.newCounterView(counter, new Coordinates(550, 60), cp, true, true);
 	    
 		for(int i = inputsequence.length-1; i >= 0; i--){
 			int seq_in = inputsequence[i];
