@@ -18,6 +18,7 @@ import algoanim.primitives.DoubleArray;
 import algoanim.primitives.DoubleMatrix;
 import algoanim.primitives.IntArray;
 import algoanim.primitives.SourceCode;
+import algoanim.primitives.Variables;
 import algoanim.primitives.generators.AnimationType;
 import algoanim.primitives.generators.GraphGenerator;
 import algoanim.primitives.generators.Language;
@@ -37,6 +38,7 @@ import algoanim.util.Coordinates;
 import algoanim.util.Offset;
 import algoanim.util.TicksTiming;
 import algoanim.util.Timing;
+import algoanim.variables.Variable;
 
 public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	//TODO for dynamic sizes of matrix b_i has to check how many states there are; variable numberOfStates for example
@@ -156,8 +158,10 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 				src.unhighlight(5);
 			}
 			
-			lang.nextStep();
-
+			lang.nextStep("Verarbeite Zeichen an Stelle " + i);
+			Variables var = lang.newVariables();
+			var.declare("Double", "Transmission", "0.4");
+			
 			for(int n = 0; n < result.getLength(); n++){
 				src.highlight(8);
 				lang.nextStep();
@@ -275,7 +279,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 		    "und entsprechen einem stochastischen Modell (Summe der ausgehenden Wahrscheinlichkeiten ist 1).",
 		    "description8", null, textProps);
 
-	    lang.nextStep();		
+	    lang.nextStep("Einleitung");		
 	    lang.hideAllPrimitives();
 
 	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
@@ -343,7 +347,6 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	
 	private void generateSummary(){
 	    lang.hideAllPrimitives();
-	    
 		TextProperties headlineProps = new TextProperties();
 		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 		        Font.SANS_SERIF, Font.BOLD, 16));
@@ -353,7 +356,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 		
 		String output_string = "";
 		for(int i = 0; i < output.length; i++) output_string += "Zustand " + (i) + ": " + output[i] + " ";
-		
+	
 		lang.newText(new Coordinates(10, 20),
 		        "Zusammenfassung (Ende des Algorithmus)",
 		        "hmm_headline", null, headlineLargeProps);
@@ -384,7 +387,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	        AnimalScript.DIRECTION_NW),
 	        "Dies sind die Wahrscheinlichkeiten nach Durchlaufen der Sequenz in einem der Zustände des HMM zu sein.",
 	        "description6", null, textProps);
-
+		lang.nextStep("Zusammenfassung");
 	    //lang.nextStep();		
 	    //lang.hideAllPrimitives();
 	}
