@@ -175,9 +175,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 			}
 			
 			lang.nextStep("Verarbeite Zeichen an Stelle " + i);
-			Variables var = lang.newVariables();
-			var.declare("Double", "Transmission", "0.4");
-			
+						
 			for(int n = 0; n < result.getLength(); n++){
 				src.highlight(8);
 				lang.nextStep();
