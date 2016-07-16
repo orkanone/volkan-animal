@@ -29,7 +29,9 @@ public class DummyGenerator implements GeneratorBundle {
     generators.add(new Levenshtein());
     generators.add(new MoodleConnectPresentation());
     generators.add(new VariableDemo());
-    generators.add(new BackwardAlgorithmGenerator());
+    generators.add(new BackwardAlgorithmGenerator(Locale.GERMANY));
+    generators.add(new BackwardAlgorithmGenerator(Locale.US));
+    
     
     // TODO "under probation"
     // generators.add(new Choly());

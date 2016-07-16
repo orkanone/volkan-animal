@@ -1,0 +1,68 @@
+noSuchKeyException=There is no resource for the key {0}
+iconNotFound=Icon {0} not found
+
+# General
+name=Backward Algorithm \u0028Hidden Markov Models\u0029
+algorithmName=Backward Algorithm
+headline=Backward Algorithm for Hidden Markov Models
+
+# Description
+descriptionParagraph1=The backward algorithm calculates the probabilites in a given hidden Markov model to observe an input sequence. A sequence is a set of symbols which can be created by the HMM \u0028emissions\u0029. Contrary to the forward algorithm the backward algorithm utilizes the backward probabilities and computes the input sequence in a reversed order. The transition probabilites, the emission probabilites and the start states are given.
+descriptionParagraph2=Hidden Markov models are used in many different areas such as natural language processing, bioinformatics, or robotics.
+
+
+# TableOfContents
+intro=Introduction
+iteration=Process symbol at index
+outro=Recap
+
+# Algorithm
+result=Result
+interResult=Intermediate Result
+bprobabilities=Backward probabilities
+sequenceMarker=current character
+
+# Source Code
+sourceComment1=multiply current state and emission probabilities
+sourceComment2=initialize result array for matrix multiplication
+sourceComment3=state transition: multiply current emission with transition matrix
+
+# Introduction Slide 1
+introhmm=Intro: Hidden Markov Model \u0028HMM\u0029
+
+introeins=A HMM is a statistic model which can be interpreted as a directed graph
+intro1=with transition probabilities between the states. 
+intro2=In a hidden markov model the states are not visible for the observer.
+intro3=Instead every state has an observable output \u0028emissions\u0029.
+intro4=Every emission can occur from every state with a given probability.
+intro5=To summarize, an HMM has different states,
+intro6=transitions between those states and emissions.
+intro7=The transitions and emissions occur with a given probability,
+intro8=the sum of the outgoing transitions, and emissions respectively, for each state equals 1.
+
+
+#Introduction Slide 2
+introbackalgo=Intro: Backward Algorithm
+intro11=The backward algorithm calculates the probabilites
+intro12=in a given hidden Markov model to observe an input sequence.
+intro13=A sequence is a set of symbols which can be created by the HMM \u0028emissions\u0029.
+
+introprocedure=Ablauf
+intro21=1. Initialization of probability vector \u0028for states of HMM\u0029
+intro22=with b_i \u0028T+1\u0029 = 1 \u0028probability of 1 since no symbol was observed yet\u0029.
+intro23=2. Compute sum for probabilities to observe the next symbol out of each state.
+intro24=The transition probabilities between the states, the probability 
+intro25=vector of the previous iteration and the emission probability of the 
+intro26=observed symbol are to be multiplied.
+intro27=3. Terminate as soon as the sequence is completely procesed.
+intro28=The probability vector states the probabilties to end up in one of the 
+intro29=states of the HMM after processing the input sequence.
+		
+# Recap
+recap=Recap \u0028End of algorithm\u0029
+outro1=The sequence was processed and the algorithm terminated.
+outro2=The vector that yields the backward probabilities state the probability
+outro3=to observe the given input sequence in the HMM.
+outro4=The calculated probabilities of this example are: 
+outro5=These are the probabilties to end up in one of the states of the HMM after processing the input sequence.
+state=state

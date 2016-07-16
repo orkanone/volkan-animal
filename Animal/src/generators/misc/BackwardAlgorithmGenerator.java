@@ -18,22 +18,18 @@ import algoanim.primitives.DoubleArray;
 import algoanim.primitives.DoubleMatrix;
 import algoanim.primitives.IntArray;
 import algoanim.primitives.SourceCode;
-import algoanim.primitives.Variables;
-import algoanim.primitives.generators.AnimationType;
-import algoanim.primitives.generators.GraphGenerator;
 import algoanim.primitives.generators.Language;
 
 import java.util.Hashtable;
 
+import translator.Translator;
 import generators.framework.properties.AnimationPropertiesContainer;
 import algoanim.animalscript.AnimalScript;
 import algoanim.counter.model.TwoValueCounter;
-import algoanim.counter.view.TwoValueView;
 import algoanim.properties.AnimationPropertiesKeys;
 import algoanim.properties.ArrayMarkerProperties;
 import algoanim.properties.ArrayProperties;
 import algoanim.properties.CounterProperties;
-import algoanim.properties.GraphProperties;
 import algoanim.properties.MatrixProperties;
 import algoanim.properties.SourceCodeProperties;
 import algoanim.properties.TextProperties;
@@ -41,10 +37,8 @@ import algoanim.util.Coordinates;
 import algoanim.util.Offset;
 import algoanim.util.TicksTiming;
 import algoanim.util.Timing;
-import algoanim.variables.Variable;
 
 public class BackwardAlgorithmGenerator implements ValidatingGenerator {
-	//TODO for dynamic sizes of matrix b_i has to check how many states there are; variable numberOfStates for example
 	private double start_vector[][] = {{1},{1}};
 	private double helper[] = {0, 0}; //
 	private double output[] = {0, 0};
@@ -55,13 +49,16 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
     private ArrayProperties ap;
     private MatrixProperties mp;
     private int[] inputsequence;
-
-    public BackwardAlgorithmGenerator() {
-
+    private Translator translator;
+    private Locale generatorLocale;
+    
+    public BackwardAlgorithmGenerator(Locale locale) {
+    	this.generatorLocale = locale;
+    	translator = new Translator("resources/BackwardAlgorithm", locale);
     }
     
     public void init(){
-    	lang = new AnimalScript("Backward-Algorithmus (Hidden Markov Models)", "Volker Hartmann, Orkan Özyurt", 800, 600);
+    	lang = new AnimalScript(this.translator.translateMessage("name"), "Volker Hartmann, Orkan Özyurt", 800, 600);
     	lang.setStepMode(true); //schrittmodus aktivieren
     }
 
@@ -109,14 +106,13 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 				"Matrix Multiplication Helper", null, ap);
 		DoubleArray result = lang.newDoubleArray(new Coordinates(45, 280), output, "Current Result", null, ap);
 		
-		
-		//TODO change helper and result Array to Matrix?
+	
 		
 		// Create two markers to point on i and j
 	    sequenceCounter = inputsequence.length-1;
 	    // Array, current index, name, display options, properties
 	    
-	    arrayIMProps.set(AnimationPropertiesKeys.LABEL_PROPERTY, "current Character");
+	    arrayIMProps.set(AnimationPropertiesKeys.LABEL_PROPERTY, this.translator.translateMessage("sequenceMarker"));
 	    arrayIMProps.set(AnimationPropertiesKeys.COLOR_PROPERTY, Color.BLACK);
 	    ArrayMarker seqenceMarker = lang.newArrayMarker(sequence, sequenceCounter, "sequenceIndex" + sequenceCounter,
 	        null, arrayIMProps);
@@ -142,7 +138,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	    // 4. Anzeige Zaehlerwert als Zahl?
 	    // 5. Anzeige Zaehlerwert als Balken?
 	    // Alternativ: nur Angabe Counter, Koordinate und Propertie
-	    TwoValueView view = lang.newCounterView(counter, new Coordinates(550, 60), cp, true, true);
+	    lang.newCounterView(counter, new Coordinates(550, 60), cp, true, true);
 	    
 		for(int i = inputsequence.length-1; i >= 0; i--){
 			int seq_in = inputsequence[i];
@@ -174,7 +170,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 				src.unhighlight(5);
 			}
 			
-			lang.nextStep("Verarbeite Zeichen an Stelle " + i);
+			lang.nextStep(this.translator.translateMessage("iteration")+ " " + i);
 						
 			for(int n = 0; n < result.getLength(); n++){
 				src.highlight(8);
@@ -233,9 +229,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
      
         return lang.toString();
     }
-    
-    //TODO Klassen Slide,InfoBox, Code aus Package algoanim.animalscript.addons benutzen
-    
+        
     private void generateDescription(){
 		TextProperties headlineProps = new TextProperties();
 		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
@@ -247,113 +241,115 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 		TextProperties textprops = new TextProperties();
 	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
 	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
-	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    lang.newText(new Coordinates(400, 20), this.translator.translateMessage("headline"), 
 	    								"Headline", null, textprops);
-		
+	    
 		lang.newText(new Coordinates(10, 50),
-		        "Intro: Hidden Markov Modell (HMM)",
+		        this.translator.translateMessage("introhmm"),
 		        "hmm_headline", null, headlineProps);
 		
+		//SLIDE 1
 		TextProperties textProps = new TextProperties();
 	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 	        Font.SANS_SERIF, Font.PLAIN, 16));
 	    lang.newText(new Coordinates(10, 100),
-	        "Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph",
+	        this.translator.translateMessage("introeins"),
 	        "description0", null, textProps);
 	    lang.newText(new Offset(0, 25, "description0",
 		    AnimalScript.DIRECTION_NW),
-		    "mit Übergangswahrscheinlichkeiten betrachtet werden.",
+		    this.translator.translateMessage("intro1"),
 		    "description1", null, textProps);
 	    lang.newText(new Offset(0, 35, "description1",
 	        AnimalScript.DIRECTION_NW),
-	        "Hidden bedeutet in dem Sinne, dass die Zustände von außen nicht beobachtbar sind.",
+	        this.translator.translateMessage("intro2"),
 	        "description2", null, textProps);
 	    lang.newText(new Offset(0, 35, "description2",
 	        AnimalScript.DIRECTION_NW),
-	        "Stattdessen hat jeder Zustand beobachtbare Ausgabesymbole (Emissionen).",
+	        this.translator.translateMessage("intro3"),
 	        "description3", null, textProps);
 	    lang.newText(new Offset(0, 35, "description3",
 	        AnimalScript.DIRECTION_NW),
-	        "Jede Emission kann aus jedem Zustand mit einer bestimmten Wahrscheinlichkeit auftreten.",
+	        this.translator.translateMessage("intro4"),
 	        "description4", null, textProps);
 	    lang.newText(new Offset(0, 50, "description4",
 	        AnimalScript.DIRECTION_NW),
-	        "Zusammenfassend betrachtet hat ein HMM verschiedene Zustände,",
+	        this.translator.translateMessage("intro5"),
 	        "description5", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5",
 		        AnimalScript.DIRECTION_NW),
-		        "Transitionen zwischen den Zuständen, und Emissionen.",
+		        this.translator.translateMessage("intro6"),
 		        "description6", null, textProps);
 	    lang.newText(new Offset(0, 35, "description6",
 	        AnimalScript.DIRECTION_NW),
-	        "Transitionen und Emissionen sind dabei mit Wahrscheinlichkeiten versehen",
+	        this.translator.translateMessage("intro7"),
 	        "description7", null, textProps);
 	    lang.newText(new Offset(0, 25, "description7",
 		    AnimalScript.DIRECTION_NW),
-		    "und entsprechen einem stochastischen Modell (Summe der ausgehenden Wahrscheinlichkeiten ist 1).",
+		    this.translator.translateMessage("intro8"),
 		    "description8", null, textProps);
 
-	    lang.nextStep("Einleitung");		
+	    lang.nextStep(this.translator.translateMessage("intro"));		
 	    lang.hideAllPrimitives();
 
-	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    lang.newText(new Coordinates(400, 20), this.translator.translateMessage("headline"), 
 	    								"Headline", null, textprops);
 	    
+	    //Slide 2
 	    lang.newText(new Coordinates(10, 50),
-		        "Intro: Backward Algorithmus",
+		        this.translator.translateMessage("introbackalgo"),
 		        "bwalg_headline", null, headlineProps);
 	    lang.newText(new Coordinates(10, 100),
-	        "Der Backward Algorithmus berechnet die Wahrscheinlichkeit,",
+	    		this.translator.translateMessage("intro11"),
 	        "description0", null, textProps);
 	    lang.newText(new Offset(0, 25, "description0",
 		    AnimalScript.DIRECTION_NW),
-		    "eine bestimmte Sequenz in einem gegebenen Hidden-Markov-Model zu beobachten.",
+		    this.translator.translateMessage("intro12"),
 		    "description1", null, textProps);
 	    lang.newText(new Offset(0, 35, "description1",
 	        AnimalScript.DIRECTION_NW),
-	        "Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann (Emissionen).",
+	        this.translator.translateMessage("intro13"),
 	        "description2", null, textProps);
 
 	    lang.nextStep();
 	    lang.newText(new Offset(0, 50, "description2",
 	        AnimalScript.DIRECTION_NW),
-	        "Ablauf",
+	        this.translator.translateMessage("introprocedure"),
 	        "description3_1", null, headlineProps);
 	    lang.newText(new Offset(0, 35, "description3_1",
 	        AnimalScript.DIRECTION_NW),
-	        "1. Initialisierung des Wahrscheinlichkeitsvektors (für die Zustände des HMM)",
+	        this.translator.translateMessage("intro21"),
 	        "description4_1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description4_1",
 		        AnimalScript.DIRECTION_NW),
-		        "mit b_i(T+1) = 1 (100%, da noch kein Zeichen beobachtet wurde).",
+		        this.translator.translateMessage("intro22"),
 		        "description4_2", null, textProps);
 	    lang.newText(new Offset(0, 35, "description4_2",
 	        AnimalScript.DIRECTION_NW),
-	        "2. Bilde die Summe über die Wahrscheinlichkeiten aus jedem Zustand das nächste Symbol zu beobachten.",
+	        this.translator.translateMessage("intro23"),
 	        "description5_1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5_1",
 	        AnimalScript.DIRECTION_NW),
-	        "Hierfür werden die Transitionswahrscheinlichkeiten zwischen den Zuständen,",
+	        this.translator.translateMessage("intro24"),
 	        "description6_1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description6_1",
 		    AnimalScript.DIRECTION_NW),
-		    "der Wahrscheinlichkeitsvektor aus dem vorgehenden Durchgang,",
+		    this.translator.translateMessage("intro25"),
 		    "description6_2", null, textProps);
 	    lang.newText(new Offset(0, 25, "description6_2",
 			AnimalScript.DIRECTION_NW),
-			"und die Emissionswahrscheinlichkeit für das beobachtete Symbol multipliziert (Matrizen).",
+			this.translator.translateMessage("intro26"),
 			"description6_3", null, textProps);
 	    lang.newText(new Offset(0, 35, "description6_3",
 	        AnimalScript.DIRECTION_NW),
-	        "3. Terminiere, sobald die Sequenz komplett eingelesen wurde.",
+	        this.translator.translateMessage("intro27"),
 	        "description7_1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description7_1",
 	        AnimalScript.DIRECTION_NW),
-	        "Der Wahrscheinlichkeitsvektor gibt nun an, mit welcher Wahrscheinlichkeit",
+	        this.translator.translateMessage("intro28"),
 	        "description8_1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description8_1",
 		    AnimalScript.DIRECTION_NW),
-		    "man nach Einlesen der Sequenz im jeweiligen Zustand landet.",
+		    this.translator.translateMessage("intro29"),
 		    "description9", null, textProps);
 	    lang.nextStep();
 	    lang.hideAllPrimitives();
@@ -369,57 +365,56 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 		        Font.SANS_SERIF, Font.BOLD, 18));
 		
 		String output_string = "";
-		for(int i = 0; i < output.length; i++) output_string += "Zustand " + (i) + ": " + output[i] + " ";
+		for(int i = 0; i < output.length; i++) output_string += this.translator.translateMessage("state") + " " + (i) + ": " + output[i] + " ";
 	
 		lang.newText(new Coordinates(10, 20),
-		        "Zusammenfassung (Ende des Algorithmus)",
+				this.translator.translateMessage("recap"),
 		        "hmm_headline", null, headlineLargeProps);
 		
 		TextProperties textProps = new TextProperties();
 	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 	        Font.SANS_SERIF, Font.PLAIN, 16));
 	    lang.newText(new Coordinates(10, 100),
-	        "Die Sequenz wurde nun komplett verarbeitet und der Algorithmus ist am Ende angelangt.",
+	    		this.translator.translateMessage("outro1"),
 	        "description1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description1",
 	        AnimalScript.DIRECTION_NW),
-	        "Die Werte des Vektors/Arrays 'Backward-Wahrscheinlichkeiten' am Ende geben an,",
+	        this.translator.translateMessage("outro2"),
 	        "description2", null, textProps);
 	    lang.newText(new Offset(0, 25, "description2",
 	        AnimalScript.DIRECTION_NW),
-	        "mit welcher Wahrscheinlichkeit die gegebene Sequenz im gegebenen HMM beobachtet werden kann.",
+	        this.translator.translateMessage("outro3"),
 	        "description3", null, textProps);
 	    lang.newText(new Offset(0, 25, "description3",
 	        AnimalScript.DIRECTION_NW),
-	        "In unserem Fall betragen die Wahrscheinlichkeiten: ",
-	        "description4", null, textProps);
+	        this.translator.translateMessage("outro4"),
+	        "description4", null, textProps);	
 	    lang.newText(new Offset(0, 25, "description4",
 	        AnimalScript.DIRECTION_NW),
 	        output_string,
 	        "description5", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5",
 	        AnimalScript.DIRECTION_NW),
-	        "Dies sind die Wahrscheinlichkeiten nach Durchlaufen der Sequenz in einem der Zustände des HMM zu sein.",
+	        this.translator.translateMessage("outro5"),
 	        "description6", null, textProps);
-		lang.nextStep("Zusammenfassung");
+		lang.nextStep(this.translator.translateMessage("outro"));
 	    //lang.nextStep();		
 	    //lang.hideAllPrimitives();
 	}
     
-	private void generateSourceCode(){
-		//TODO Add Small headline? "Backward Algorithmus" 
+	private void generateSourceCode(){ 
 		src.addCodeLine("private void backward(double b_i[], int input_index){", null, 0, null); // 0
 		src.addCodeLine("if (input_index >= 0){", null, 2, null); // 1
 	    src.addCodeLine("int input = input_sequence[input_index];", null, 4, null); // 2
-	    src.addCodeLine("// Multipliziere momentane Zustands- mit Emissionswahrscheinlichkeiten", null, 4, null); // 3
+	    src.addCodeLine("// " + this.translator.translateMessage("sourceComment1"), null, 4, null); // 3
 	    src.addCodeLine("for (int j = 0; j < B[0].length; j++){", null, 4, null); // 4
 	    src.addCodeLine("helper[j] = b_i[j] * B[j][input];", null, 6, null); // 5
 	    src.addCodeLine("}", null, 4, null); // 6
-	    src.addCodeLine("// initialisiere Ergebnisarray für Matrix-Multiplikation", null, 4, null); // 7
+	    src.addCodeLine("// " + this.translator.translateMessage("sourceComment2"), null, 4, null); // 7
 	    src.addCodeLine("for (int n = 0; n < output.length; n++){", null, 4, null); // 8
 	    src.addCodeLine("output[n] = 0;", null, 6, null); // 9
 	    src.addCodeLine("}", null, 4, null); // 10
-	    src.addCodeLine("// Zustandsübergang: Multipliziere current emission mit Transitionsmatrix", null, 4, null); // 11
+	    src.addCodeLine("// " + this.translator.translateMessage("sourceComment3"), null, 4, null); // 11
 	    src.addCodeLine("for (int m = 0; m < T[0].length; m++){", null, 4, null); // 12
 	    src.addCodeLine("for (int n = 0; n < T[0].length; n++){", null, 6, null); // 13
 	    src.addCodeLine("output[m] += T[m][n] * helper[n];", null, 8, null); // 14
@@ -435,7 +430,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	    TextProperties textprops = new TextProperties();
 	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
 	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
-	    lang.newText(new Coordinates(400, 20), "Backward Algorithm für Hidden Markov Model", 
+	    lang.newText(new Coordinates(400, 20), this.translator.translateMessage("headline"), 
 	    								"Headline", null, textprops);
 
 	    //Labels for inputs
@@ -446,9 +441,9 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	    lang.newText(new Coordinates(165,69), "B = ", "Label B", null, labelprops);
 	    
 	    //Labels for outputs
-	    lang.newText(new Coordinates(50, 260), "Zwischenergebnis:", "helper", null, labelprops);
-	    lang.newText(new Coordinates(50,320), "Ergebnis:", "Result", null, labelprops);
-	    lang.newText(new Coordinates(50, 380), "Backward-Wahrscheinlichkeiten:", "blabel", null, labelprops);
+	    lang.newText(new Coordinates(50, 260), this.translator.translateMessage("interResult") +":", "helper", null, labelprops);
+	    lang.newText(new Coordinates(50,320), this.translator.translateMessage("result") +":", "Result", null, labelprops);
+	    lang.newText(new Coordinates(50, 380), this.translator.translateMessage("bprobabilities")+":", "blabel", null, labelprops);
 	}
 
 	
@@ -457,11 +452,11 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	}
     
     public String getName() {
-        return "Backward-Algorithmus (Hidden Markov Models)";
+        return this.translator.translateMessage("name");
     }
 
     public String getAlgorithmName() {
-        return "Backward-Algorithmus";
+        return this.translator.translateMessage("algorithmName");
     }
 
     public String getAnimationAuthor() {
@@ -469,9 +464,8 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
     }
 
     public String getDescription(){
-        return "Der Backward Algorithmus berechnet die Wahrscheinlichkeit, eine bestimmte Symbolsequenz in einem gegebenen Hidden-Markov-Model (HMM) zu beobachten. Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann (Emissionen). Anders als beim Forward-Algorithmus werden hier die Backward-Variablen verwendet, die Sequenz wird rückwärts verarbeitet. Dabei werden der Anfangszustand des HMM sowie die Transitionsmatrix A und die Emissionsmatrix B als gegeben betrachtet. "
- +"\n"
- +"Hidden Markov Models werden in vielen Gebieten wie beispielsweise im Natural Language Processing, in der Bioinformatik oder in der Robotik verwendet.";
+        return this.translator.translateMessage("descriptionParagraph1") +"\n"
+        		+ this.translator.translateMessage("descriptionParagraph2");
     }
 
     public String getCodeExample(){
@@ -526,7 +520,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
     }
 
     public Locale getContentLocale() {
-        return Locale.GERMAN;
+        return this.generatorLocale;
     }
 
     public GeneratorType getGeneratorType() {

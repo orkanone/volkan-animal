@@ -1,0 +1,71 @@
+noSuchKeyException=Keine Ressource f\u00fcr Key {0} vorhanden
+iconNotFound=Icon {0} nicht gefunden
+
+# General
+name=Backward-Algorithmus \u0028Hidden Markov Models\u0029
+algorithmName=Backward-Algorithmus
+headline=Backward-Algorithmus f\u00fcr Hidden Markov Model
+
+# Overview
+descriptionParagraph1=Der Backward-Algorithmus berechnet die Wahrscheinlichkeit, eine bestimmte Symbolsequenz in einem gegebenen Hidden-Markov-Model \u0028HMM\u0029 zu beobachten. Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann \u0028Emissionen\u0029. Anders als beim Forward-Algorithmus werden hier die Backward-Variablen verwendet, die Sequenz wird r\u00fcckw\u00e4rts verarbeitet. Dabei werden der Anfangszustand des HMM sowie die Transitionsmatrix A und die Emissionsmatrix B als gegeben betrachtet.
+descriptionParagraph2=Hidden Markov Models werden in vielen Gebieten wie beispielsweise im Natural Language Processing, in der Bioinformatik oder in der Robotik verwendet.
+
+
+# TableOfContents
+intro=Einleitung
+iteration=Verarbeite Zeichen an Stelle
+outro=Zusammenfassung
+
+# Algorithm
+result=Ergebnis
+interResult=Zwischenergebnis
+bprobabilities=Backward-Wahrscheinlichkeiten
+sequenceMarker=aktuelles Symbol
+
+# Source Code
+sourceComment1=Multipliziere momentane Zustands- mit Emissionswahrscheinlichkeiten
+sourceComment2=initialisiere Ergebnisarray f\u00fcr Matrix-Multiplikation
+sourceComment3=Zustands\u00fcbergang: Multipliziere current emission mit Transitionsmatrix
+
+# Introduction Slide 1
+introhmm=Intro: Hidden Markov Model \u0028HMM\u0029
+
+introeins=Ein HMM ist ein stochastisches Modell und kann als gerichteter Graph
+intro1=mit \u00dcbergangswahrscheinlichkeiten betrachtet werden.
+intro2=Hidden bedeutet in dem Sinne, dass die Zust\u00e4nde von au\u00dfen nicht beobachtbar sind.
+intro3=Stattdessen hat jeder Zustand beobachtbare Ausgabesymbole \u0028Emissionen\u0029.
+intro4=Jede Emission kann aus jedem Zustand mit einer bestimmten Wahrscheinlichkeit auftreten.
+intro5=Zusammenfassend betrachtet hat ein HMM verschiedene Zust\u00e4nde,
+intro6=Transitionen zwischen den Zust\u00e4nden, und Emissionen.
+intro7=Transitionen und Emissionen sind dabei mit Wahrscheinlichkeiten versehen
+intro8=und entsprechen einem stochastischen Modell \u0028Summe der ausgehenden Wahrscheinlichkeiten ist 1\u0029.
+
+#Introduction Slide 2
+introbackalgo=Intro: Backward-Algorithmus
+intro11=Der Backward-Algorithmus berechnet die Wahrscheinlichkeit,
+intro12=eine bestimmte Sequenz in einem gegebenen Hidden-Markov-Model zu beobachten.
+intro13=Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann \u0028Emissionen\u0029.
+
+introprocedure=Ablauf
+intro21=1. Initialisierung des Wahrscheinlichkeitsvektors \u0028f\u00fcr die Zust\u00e4nde des HMM\u0029
+intro22=mit b_i \u0028T+1\u0029 = 1 \u0028100%, da noch kein Zeichen beobachtet wurde\u0029.
+intro23=2. Bilde die Summe \u00fcber die Wahrscheinlichkeiten, aus jedem Zustand das n\u00e4chste Symbol zu beobachten.
+intro24=Hierf\u00fcr werden die Transitionswahrscheinlichkeiten zwischen den Zust\u00e4nden,
+intro25=der Wahrscheinlichkeitsvektor aus dem vorgehenden Durchgang,
+intro26=und die Emissionswahrscheinlichkeit f\u00fcr das beobachtete Symbol multipliziert \u0028Matrizen\u0029.
+intro27=3. Terminiere, sobald die Sequenz komplett eingelesen wurde.
+intro28=Der Wahrscheinlichkeitsvektor gibt nun an, mit welcher Wahrscheinlichkeit
+intro29=man nach Einlesen der Sequenz im jeweiligen Zustand landet.
+
+# Recap
+recap=Zusammenfassung \u0028Ende des Algorithmus\u0029
+outro1=Die Sequenz wurde nun komplett verarbeitet und der Algorithmus ist am Ende angelangt.
+outro2=Die Werte des Vektors/Arrays 'Backward-Wahrscheinlichkeiten' am Ende geben an,
+outro3=mit welcher Wahrscheinlichkeit die gegebene Sequenz im gegebenen HMM beobachtet werden kann.
+outro4=In unserem Fall betragen die Wahrscheinlichkeiten: 
+outro5=Dies sind die Wahrscheinlichkeiten nach Durchlaufen der Sequenz in einem der Zust\u00e4nde des HMM zu sein.
+state=Zustand
+
+#( = \u0028
+#) = \u0029
+#
