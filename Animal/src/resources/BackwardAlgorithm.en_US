@@ -7,8 +7,8 @@ algorithmName=Backward Algorithm
 headline=Backward Algorithm for Hidden Markov Models
 
 # Description
-descriptionParagraph1=The backward algorithm calculates the probabilites in a given hidden Markov model to observe an input sequence. A sequence is a set of symbols which can be created by the HMM \u0028emissions\u0029. Contrary to the forward algorithm the backward algorithm utilizes the backward probabilities and computes the input sequence in a reversed order. The transition probabilites, the emission probabilites and the start states are given.
-descriptionParagraph2=Hidden Markov models are used in many different areas such as natural language processing, bioinformatics, or robotics.
+descriptionParagraph1=The backward algorithm calculates the probabilities in a given hidden Markov model to observe an input sequence. A sequence is a set of symbols, which can be created by the HMM \u0028emissions\u0029. Contrary to the forward algorithm the backward algorithm utilizes the backward probabilities and computes the input sequence in a reversed order. The transition probabilities, the emission probabilities and the start states are given.
+descriptionParagraph2=Hidden Markov models are used in many different areas, such as natural language processing, bioinformatics, or robotics.
 
 
 # TableOfContents
@@ -30,10 +30,10 @@ sourceComment3=state transition: multiply current emission with transition matri
 # Introduction Slide 1
 introhmm=Intro: Hidden Markov Model \u0028HMM\u0029
 
-introeins=A HMM is a statistic model which can be interpreted as a directed graph
+introeins=A HMM is a statistic model, which can be interpreted as a directed graph
 intro1=with transition probabilities between the states. 
-intro2=In a hidden markov model the states are not visible for the observer.
-intro3=Instead every state has an observable output \u0028emissions\u0029.
+intro2=In a hidden Markov model, the states are not visible to the observer.
+intro3=Instead every state has observable outputs \u0028emissions\u0029.
 intro4=Every emission can occur from every state with a given probability.
 intro5=To summarize, an HMM has different states,
 intro6=transitions between those states and emissions.
@@ -43,9 +43,9 @@ intro8=the sum of the outgoing transitions, and emissions respectively, for each
 
 #Introduction Slide 2
 introbackalgo=Intro: Backward Algorithm
-intro11=The backward algorithm calculates the probabilites
+intro11=The backward algorithm calculates the probabilities
 intro12=in a given hidden Markov model to observe an input sequence.
-intro13=A sequence is a set of symbols which can be created by the HMM \u0028emissions\u0029.
+intro13=A sequence is a set of symbols, which can be created by the HMM \u0028emissions\u0029.
 
 introprocedure=Ablauf
 intro21=1. Initialization of probability vector \u0028for states of HMM\u0029
@@ -54,15 +54,15 @@ intro23=2. Compute sum for probabilities to observe the next symbol out of each 
 intro24=The transition probabilities between the states, the probability 
 intro25=vector of the previous iteration and the emission probability of the 
 intro26=observed symbol are to be multiplied.
-intro27=3. Terminate as soon as the sequence is completely procesed.
-intro28=The probability vector states the probabilties to end up in one of the 
+intro27=3. Terminate as soon as the sequence is completely processed.
+intro28=The probability vector states the probabilities to end up in one of the 
 intro29=states of the HMM after processing the input sequence.
 		
 # Recap
 recap=Recap \u0028End of algorithm\u0029
 outro1=The sequence was processed and the algorithm terminated.
-outro2=The vector that yields the backward probabilities state the probability
+outro2=The vector that yields the backward probabilities states the probability
 outro3=to observe the given input sequence in the HMM.
 outro4=The calculated probabilities of this example are: 
-outro5=These are the probabilties to end up in one of the states of the HMM after processing the input sequence.
+outro5=These are the probabilities to end up in one of the states of the HMM after processing the input sequence.
 state=state
