@@ -137,7 +137,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	    // 3. CounterProperties
 	    // 4. Anzeige Zaehlerwert als Zahl?
 	    // 5. Anzeige Zaehlerwert als Balken?
-	    // Alternativ: nur Angabe Counter, Koordinate und Propertie
+	    // Alternativ: nur Angabe Counter, Koordinate und Properties
 	    lang.newCounterView(counter, new Coordinates(550, 60), cp, true, true);
 	    
 		for(int i = inputsequence.length-1; i >= 0; i--){
