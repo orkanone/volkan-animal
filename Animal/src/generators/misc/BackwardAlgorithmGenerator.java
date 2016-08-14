@@ -89,7 +89,6 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 	    this.generateLabelsAndHeadline();
 	    
 		//Primitives to display
-	    //TODO catch T and B input
 		double T[][] = {{0.7, 0.3}, {0.3, 0.7}}; //transition prob
 		double B[][] = {{0.9, 0.1}, {0.2, 0.8}}; //emission prob
 		
@@ -543,9 +542,7 @@ public class BackwardAlgorithmGenerator implements ValidatingGenerator {
 			if (i < 0){
 				return false;
 			}
-		}
-		//TODO When changeable Matrix A and B are implemented, validate the given input. (Probabilites should be > 0)
-		
+		}		
 		return true;
 	}
 

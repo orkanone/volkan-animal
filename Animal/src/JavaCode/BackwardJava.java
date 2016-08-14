@@ -42,13 +42,16 @@ public class BackwardJava {
 			
 			for(int n = 0; n < output.length; n++){
 				//output[n] /= norm;
-				System.out.println(output[n]);
 				b_i[n] = output[n];
 			}
 			
 		}
 
-		
+		for(int n = 0; n < output.length; n++){
+			//output[n] /= norm;
+			System.out.println(output[n]);
+		}
+
 	}
 	
 	
