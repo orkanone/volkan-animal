@@ -276,7 +276,6 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	    	src.unhighlight(13);
 	    	hor_i++;
     	}
-    	//line 9, 10, 11
 
     	//hide all previous steps, but still keep the current progress 
     	lang.hideAllPrimitives();
