@@ -1,3 +1,6 @@
+import generators.framework.Generator;
+import generators.framework.GeneratorType;
+import generators.framework.ValidatingGenerator;
 import generators.framework.properties.AnimationPropertiesContainer;
 
 import java.awt.Color;
@@ -6,28 +9,41 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import translator.Translator;
 import algoanim.animalscript.AnimalScript;
 import algoanim.primitives.SourceCode;
+import algoanim.primitives.StringArray;
 import algoanim.primitives.StringMatrix;
+import algoanim.primitives.Text;
 import algoanim.primitives.generators.Language;
 import algoanim.properties.AnimationPropertiesKeys;
+import algoanim.properties.ArrayProperties;
 import algoanim.properties.MatrixProperties;
 import algoanim.properties.SourceCodeProperties;
 import algoanim.properties.TextProperties;
 import algoanim.util.Coordinates;
 
 
-public class MapReduceGenerator {
+public class MapReduceGenerator implements ValidatingGenerator {
 	private SourceCode src;
+	private SourceCode src_2;
     private Language lang;
     
     private LinkedList<String[]> lines;
     
+    private Translator translator;
+    private Locale generatorLocale;
+    
+    public MapReduceGenerator(Locale locale) {
+    	this.generatorLocale = locale;
+    	translator = new Translator("resources/BackwardAlgorithm", locale);
+    }
     public MapReduceGenerator(){
     	
     }
@@ -38,56 +54,7 @@ public class MapReduceGenerator {
     }
 
     public String generate(AnimationPropertiesContainer props,Hashtable<String, Object> primitives) {
-    	
-    	// introduction pages in animal
-    	this.generateDescription(); //TODO description in animal
-    	
-    	// get user input values
-    	String input[][] = (String[][])primitives.get("input");
-    	MatrixProperties mp = (MatrixProperties)props.getPropertiesByName("matrixproperties");
-    	
-    	
-    	mp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
-    	
-    	//TODO short description for each step
-    	StringMatrix inputMatrix = lang.newStringMatrix(new Coordinates(60, 55), input, "input data", null, mp);
-    	
-    	
-    	SourceCodeProperties sourceCodeProps = new SourceCodeProperties();
-	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
-	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
-    	src = lang.newSourceCode(new Coordinates(450, 180), "sourceCode",
-		        null, sourceCodeProps);
-    	this.generateSourceCode();
-    	
-    	lang.nextStep();
-    	
-    	String splitInput[][] = input;
-    	for(int i=0; i < input.length; i++){
-    		for(int j=0; j < input[i].length; j++){
-    			splitInput[i][j] = "";
-    		}
-    	}
-    	StringMatrix splitMatrix = lang.newStringMatrix(new Coordinates(60, 150), splitInput, "split input data", null, mp);
-    	
-    	TextProperties labelprops = new TextProperties();
-	    labelprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-	    
-	    //Splitting
-    	lines = new LinkedList<String[]>();
-    	for(int i=0; i < input.length; i++){
-    		lines.add(input[i]);
-    		lang.newText(new Coordinates(25,(150+i*14)), "Zeile " + (i+1) + ": ", "Zeilennummer", null, labelprops);
-    		inputMatrix.highlightCellColumnRange(i, 0, input[i].length, null, null);
-			for(int j=0; j < input[i].length; j++){
-    			splitInput[i][j] = input[i][j];
-    		}
-    		lang.nextStep();
-    		inputMatrix.unhighlightCellColumnRange(i, 0, input[i].length, null, null);
-    	}
-    	
-    	
-    	return lang.toString();
+        return lang.toString();
     }
     
     //n Anzahl der Zeilen
@@ -192,7 +159,143 @@ public class MapReduceGenerator {
 	    
     }
     
-    public String generate(){
+    public String generate(String input_in[][]){
+    	//Headline
+	    TextProperties textprops = new TextProperties();
+	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
+	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
+	    Text headline = lang.newText(new Coordinates(400, 20), "MapReduce Algorithm (Hadoop approach)", 
+	    								"Headline", null, textprops);
+    	
+    	// introduction pages in animal
+    	this.generateDescription(); //TODO description in animal
+    	
+    	// get user input values
+    	String input[][] = input_in;
+    	MatrixProperties mp = new MatrixProperties();
+		mp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
+		mp.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
+	    mp.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
+	    mp.set(AnimationPropertiesKeys.GRID_STYLE_PROPERTY, "matrix");
+    	
+    	ArrayProperties ap = new ArrayProperties();
+		ap.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
+		ap.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
+	    ap.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
+	    ap.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+	    
+    	
+    	//TODO short description for each step
+    	//StringMatrix inputMatrix = lang.newStringMatrix(new Coordinates(60, 55), input, "input data", null, mp);
+    	
+    	
+    	SourceCodeProperties sourceCodeProps = new SourceCodeProperties();
+	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
+	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
+    	src = lang.newSourceCode(new Coordinates(450, 55), "sourceCode",
+		        null, sourceCodeProps);
+    	src_2 = lang.newSourceCode(new Coordinates(450, 55), "sourceCode_2",
+		        null, sourceCodeProps);
+    	this.generateSourceCode();
+    	src_2.hide();
+    	
+    	StringArray inputArray[] = new StringArray[input.length];
+    	for(int i=0; i < input.length; i++){
+    		inputArray[i] = lang.newStringArray(new Coordinates(60,(55+i*26)), input[i], "input", null, ap);
+    	}
+    	
+    	lang.nextStep();
+    	
+    	TextProperties labelprops = new TextProperties();
+	    labelprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+	    
+	    
+	    StringArray inputArray_split[] = new StringArray[input.length];
+    	
+	    int offset = input.length*26 + 90;
+	    lang.newText(new Coordinates(100, offset), "1. Schritt: Input Split", "label:step1", null, textprops);
+	    offset += 50;
+	    //Splitting
+    	lines = new LinkedList<String[]>();
+    	for(int i=0; i < input.length; i++){
+    		src.highlight(2);
+    		for(int j = 0; j < input[i].length; j++)
+    			inputArray[i].highlightCell(j, null, null);
+			lang.nextStep();
+			src.unhighlight(2);
+    		
+    		lines.add(input[i]);
+    		lang.newText(new Coordinates(10,(offset+i*30)), "Zeile " + (i+1) + ": ", "Zeilennummer", null, labelprops);
+    		inputArray_split[i] = lang.newStringArray(new Coordinates(60,(offset+i*30)), input[i], "split input", null, ap);
+    		src.highlight(3);
+    		lang.nextStep();
+    		for(int j = 0; j < input[i].length; j++)
+    			inputArray[i].unhighlightCell(j, null, null);
+    		src.unhighlight(3);
+    	}
+    	
+    	
+    	
+    	/*############################ MAP #################################################*/
+    	LinkedList <LinkedList<SimpleEntry<String, Integer>>> maps = 
+    			new LinkedList <LinkedList<SimpleEntry<String, Integer>>>();
+    	
+    	offset += input.length*26 + 50;
+    	int vert_i = 0;
+    	int hor_i = 0;
+    	int len_input = 0;
+    	StringArray mapArray[][] = new StringArray[input.length][100];
+    	
+    	lang.newText(new Coordinates(100, offset), "2. Schritt: Mapping", "label:step2", null, textprops);
+    	offset += 50;
+    	for (String line[] : lines){
+    		Integer count = new Integer(1);	
+    		LinkedList<SimpleEntry<String, Integer>> sets = 
+    				new LinkedList<SimpleEntry<String, Integer>>();
+    		vert_i = 0;
+    		src.highlight(9);
+    		lang.nextStep();
+    		src.unhighlight(9);
+    		for (String data : line){
+        		inputArray_split[hor_i].highlightCell(vert_i, null, null);
+        		src.highlight(10);
+        		lang.nextStep();
+    			sets.add(new SimpleEntry<String,Integer>(data, count));
+    			mapArray[hor_i][vert_i] = lang.newStringArray(new Coordinates(60+hor_i*100,(offset+vert_i*30)), new String[]{data, count.toString()}, "mapArray", null, ap);
+    	    	src.unhighlight(10);
+    	    	src.highlight(11);
+    	    	lang.nextStep();
+        		inputArray_split[hor_i].unhighlightCell(vert_i, null, null);
+        		src.unhighlight(11);
+        		vert_i++;
+    		}
+    		lang.newText(new Coordinates(60+hor_i*100, (offset-25)), "Sets "+(hor_i+1), "set_x", null, labelprops);
+    		maps.add(sets);
+    		src.highlight(13);
+	    	lang.nextStep();
+	    	src.unhighlight(13);
+	    	hor_i++;
+    	}
+    	//line 9, 10, 11
+
+    	//hide all previous steps, but still keep the current progress 
+    	lang.hideAllPrimitives();
+    	headline.show();
+    	src_2.show();
+    	hor_i = 0;
+    	offset = 55;
+    	for (String line[] : lines){
+    		Integer count = new Integer(1);	
+    		vert_i = 0;
+    		for (String data : line){
+        		mapArray[hor_i][vert_i] = lang.newStringArray(new Coordinates(60+hor_i*100, (offset+vert_i*30)), new String[]{data, count.toString()}, "mapArray", null, ap);
+    	    	vert_i++;
+    		}
+    		lang.newText(new Coordinates(60+hor_i*100, (offset-25)), "Sets "+(hor_i+1), "set_x", null, labelprops);
+    		hor_i++;
+    	}
+    	lang.nextStep();
+    	
     	return lang.toString();
     }
     
@@ -228,66 +331,44 @@ public class MapReduceGenerator {
     
     
     private void generateSourceCode(){ 
-		src.addCodeLine("// split input data into lines", null, 0, null); // 0
-		src.addCodeLine("private void split(String[][] input){", null, 0, null); // 1
-	    src.addCodeLine("lines = new LinkedList<String[]>();", null, 2, null); // 2
-	    src.addCodeLine("for(int i=0; i < input.length; i++){", null, 2, null); // 3
-	    src.addCodeLine("lines.add(input[i]);", null, 4, null); // 4
-	    src.addCodeLine("}", null, 2, null); // 5
-	    src.addCodeLine("map(lines);", null, 2, null); // 6
-	    src.addCodeLine("}", null, 0, null); // 7
-	    src.addCodeLine("// generate map from words in lines", null, 4, null); // 8
-	    src.addCodeLine("private void map(LinkedList<String[]> lines){", null, 0, null); // 9
-	    src.addCodeLine("LinkedList <LinkedList<SimpleEntry<String, Integer>>> maps = "
-	    		+ "new LinkedList <LinkedList<SimpleEntry<String, Integer>>>();", null, 2, null); // 10
-	    src.addCodeLine("for (String line[] : lines){", null, 2, null); // 11
-	    src.addCodeLine("Integer count = new Integer(1); // all word occurences have value 1", null, 4, null); // 12
-	    src.addCodeLine("LinkedList<SimpleEntry<String, Integer>> sets = " 
-    				+ "new LinkedList<SimpleEntry<String, Integer>>();", null, 2, null); // 13
-	    src.addCodeLine("add each word in current line to the set", null, 2, null); // 14
-	    src.addCodeLine("for (String data : line){", null, 2, null); // 15
-	    src.addCodeLine("sets.add(new SimpleEntry<String,Integer>(data, count));", null, 4, null); // 16
-	    src.addCodeLine("}", null, 2, null); // 17
-	    src.addCodeLine("maps.add(sets); //add current line set to map", null, 2, null); // 18
-	    src.addCodeLine("shuffle(maps);", null, 2, null); // 19
-	    src.addCodeLine("}", null, 0, null); // 20
-	    src.addCodeLine("// shuffle the line mappings to the right worker", null, 2, null); // 21
-	    src.addCodeLine("private void shuffle(LinkedList <LinkedList<SimpleEntry<String, Integer>>> maps){", null, 0, null); // 22
-	    src.addCodeLine("HashMap<String, LinkedList<SimpleEntry<String, Integer>>> hashmap = "
-    			+ "new HashMap<String, LinkedList<SimpleEntry<String, Integer>>>();", null, 2, null); // 23
-	    src.addCodeLine("// assign similar words to the same map entry (collection)", null, 2, null); // 24
-	    src.addCodeLine("for (LinkedList<SimpleEntry<String, Integer>> setlist : maps){", null, 2, null); // 25
-	    src.addCodeLine("for (SimpleEntry<String, Integer> set : setlist){", null, 4, null); // 26
-	    src.addCodeLine("String currentkey = set.getKey();", null, 6, null); // 27
-	    src.addCodeLine("if (hashmap.containsKey(currentkey)){", null, 6, null); // 28
-	    src.addCodeLine("hashmap.get(currentkey).add(set);", null, 8, null); // 29
-	    src.addCodeLine("}", null, 6, null); // 30
-	    src.addCodeLine("else { // new word occurence", null, 6, null); // 31
-	    src.addCodeLine("LinkedList<SimpleEntry<String, Integer>> newlist = "
-    						+ "new LinkedList<SimpleEntry<String, Integer>>();", null, 8, null); // 32
-	    src.addCodeLine("newlist.add(set);", null, 8, null); // 33
-	    src.addCodeLine("hashmap.put(currentkey, newlist);", null, 8, null); // 34
-	    src.addCodeLine("}", null, 6, null); // 35
-	    src.addCodeLine("}", null, 4, null); // 36
-	    src.addCodeLine("}", null, 2, null); // 37
-	    src.addCodeLine("reduce(hashmap);", null, 2, null); // 38
-	    src.addCodeLine("// reduce collected entries of same word occurences by counting the number of sets", null, 0, null); // 39
-	    src.addCodeLine("private void reduce(HashMap<String, LinkedList<SimpleEntry<String, Integer>>> hashmap){", null, 0, null); // 40
-	    src.addCodeLine("HashMap<String, Integer> reduced_map = new HashMap<String, Integer>();", null, 2, null); // 41
-	    src.addCodeLine("for (Entry<String, LinkedList<SimpleEntry<String, Integer>>> entry : hashmap.entrySet()) {", null, 2, null); // 42
-	    src.addCodeLine("String current_key = entry.getKey();", null, 4, null); // 43
-	    src.addCodeLine("LinkedList<SimpleEntry<String, Integer>> current_list = entry.getValue();", null, 4, null); // 44
-	    src.addCodeLine("for (SimpleEntry<String,Integer> current_entry : current_list){", null, 4, null); // 45
-	    src.addCodeLine("Integer current_value = current_entry.getValue();", null, 6, null); // 46
-	    src.addCodeLine("if (reduced_map.containsKey(current_key)){", null, 6, null); // 47
-	    src.addCodeLine("current_value = Integer.sum(current_value, reduced_map.get(current_key));", null, 8, null); // 48
-	    src.addCodeLine("}", null, 6, null); // 49
-	    src.addCodeLine("reduced_map.put(current_key, current_value);", null, 6, null); // 50
-	    src.addCodeLine("}", null, 4, null); // 51
-	    src.addCodeLine("};", null, 2, null); // 52
-	    src.addCodeLine("}", null, 0, null); // 53
-	    
-	}
+    	src.addCodeLine("// split between every line in the document", null, 0, null); // 0
+		src.addCodeLine("split(String document) {", null, 0, null); // 1
+	    src.addCodeLine("for each line l in document {", null, 2, null); // 2
+	    src.addCodeLine("lines.add(l);", null, 4, null); // 3
+	    src.addCodeLine("}", null, 2, null); // 4
+	    src.addCodeLine("}", null, 0, null); // 5
+	    src.addCodeLine("// map every word to a key-value pair, where key is the word ", null, 0, null); // 6
+	    src.addCodeLine("// and value the number of occurences (here always 1) ", null, 0, null); // 7
+	    src.addCodeLine("map(String[] lines) {", null, 0, null); // 8
+	    src.addCodeLine("for each line l in lines {", null, 2, null); // 9
+	    src.addCodeLine("for each word w in l {", null, 4, null); // 10
+		src.addCodeLine("sets.add(w/key, count/value);", null, 6, null); // 11
+	    src.addCodeLine("}", null, 4, null); // 12
+	    src.addCodeLine("maps.add(sets);", null, 4, null); // 13
+	    src.addCodeLine("}", null, 2, null); // 14
+	    src.addCodeLine("}", null, 0, null); // 15
+	    src_2.addCodeLine("// create a word list for each distinct ", null, 0, null); // 6
+	    src_2.addCodeLine("// word occurence (collect same words in one list) ", null, 0, null); // 7
+	    src_2.addCodeLine("shuffle(maps) {", null, 0, null); // 8
+	    src_2.addCodeLine("shuffled_map;", null, 2, null); // 9
+	    src_2.addCodeLine("for each set s in maps {", null, 2, null); // 8
+	    src_2.addCodeLine("// is there already a list for this word ?", null, 4, null); // 9
+	    src_2.addCodeLine("if(word/key of s is already in shuffled_map) {", null, 4, null); // 0
+	    src_2.addCodeLine("shuffled_map.get(word).add(s);", null, 6, null); // 1
+	    src_2.addCodeLine("} else {", null, 4, null); // 2
+	    src_2.addCodeLine("// create new list for this word", null, 6, null); // 3
+	    src_2.addCodeLine("shuffled_map.add(word);", null, 6, null); // 4
+	    src_2.addCodeLine("}", null, 4, null); // 5
+	    src_2.addCodeLine("}", null, 2, null); // 6
+	    src_2.addCodeLine("}", null, 0, null); // 7
+	    src_2.addCodeLine("// for each wordlist created in the shuffle step:", null, 0, null); // 8
+	    src_2.addCodeLine("reduce sets to one set including the number of word occurences", null, 0, null); // 9
+	    src_2.addCodeLine("reduce(shuffled_map(word)) {", null, 0, null); // 3
+	    src_2.addCodeLine("for each set in shuffled_map(word) {", null, 2, null); // 4
+	    src_2.addCodeLine("shuffled_map.increaseWordCount(count/value);", null, 4, null); // 5
+	    src_2.addCodeLine("}", null, 2, null); // 6
+	    src_2.addCodeLine("}", null, 0, null); // 7
+    }
     
     public static void main(String[] args) {
 		MapReduceGenerator gen = new MapReduceGenerator();
@@ -297,8 +378,104 @@ public class MapReduceGenerator {
 				{"Bourbon","Beer","Beer", "Gin"}, 
 				{"Gin","Bourbon", "Cider"}
 				};
-		gen.mapReduce(input);
+		//gen.mapReduce(input);
 		gen.init();
-		gen.generate();
+		System.out.println(gen.generate(input));
+	}
+    
+    public String getName() {
+        return this.translator.translateMessage("name");
+    }
+
+    public String getAlgorithmName() {
+        return this.translator.translateMessage("algorithmName");
+    }
+
+    public String getAnimationAuthor() {
+        return "Volker Hartmann, Orkan Özyurt";
+    }
+
+    public String getDescription(){
+        return this.translator.translateMessage("descriptionParagraph1") +"\n"
+        		+ this.translator.translateMessage("descriptionParagraph2");
+    }
+    
+    public String getCodeExample(){
+        return "//Calculated probabilites are saved in b_i"
+ +"\n"
+ +"void computeProbabilities(){"
+ +"\n"
+ +"for(int i = input.length-1; i >= 0; i--){"
+ +"\n"
+ +"int seq_in = input[i];"
+ +"\n"
+ +"for(int j = 0; j < B[0].length; j++){"
+ +"\n"
+ +"helper[j] = b_i[j] * B[j][seq_in]; "
+ +"\n"
+ +"}"
+ +"\n"
+ +"\n"
+ +"for(int n = 0; n < output.length; n++){"
+ +"\n"
+ +"output[n] = 0;"
+ +"\n"
+ +"}		"
+ +"\n"
+ +"	"
+ +"\n"
+ +"for(int m = 0; m < T[0].length; m++){"
+ +"\n"
+ +"for(int n = 0; n < T[0].length; n++){"
+ +"\n"
+ +"output[m] += T[m][n] * helper[n]; "
+ +"\n"
+ +"}	"
+ +"\n"
+ +"}"
+ +"\n"
+ +"for(int n = 0; n < output.length; n++){"
+ +"\n"
+ +"b_i[n] = output[n];"
+ +"\n"
+ +"}"
+ +"\n"
+ +"		"
+ +"\n"
+ +"}"
+ +"\n"
+ +"}";
+    }
+
+    public String getFileExtension(){
+        return "asu";
+    }
+
+    public Locale getContentLocale() {
+        return this.generatorLocale;
+    }
+
+    public GeneratorType getGeneratorType() {
+        return new GeneratorType(GeneratorType.GENERATOR_TYPE_MORE);
+    }
+
+    public String getOutputLanguage() {
+        return Generator.JAVA_OUTPUT;
+    }
+
+    
+   /* Diese erhält die gleichen Parameter wie die generate(...)-Methode.
+    * Sind die Parameter zulässig, soll die Methode true liefern, ansonsten false.
+    */
+	@Override
+	public boolean validateInput(AnimationPropertiesContainer props,
+			Hashtable<String, Object> primitives)
+			throws IllegalArgumentException {
+		for(int i : (int[])primitives.get("inputsequence")){
+			if (i < 0){
+				return false;
+			}
+		}		
+		return true;
 	}
 }
