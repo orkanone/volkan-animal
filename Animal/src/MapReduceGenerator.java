@@ -372,8 +372,12 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	for (Entry<String, LinkedList<SimpleEntry<String, Integer>>> entry : hashmap.entrySet()) {
     		String current_key = entry.getKey();
     		LinkedList<SimpleEntry<String, Integer>> current_list = entry.getValue();
-		
+    		src_2.highlight(16);
+    		lang.nextStep();
+    		src_2.unhighlight(16);
+    		
     		for (SimpleEntry<String,Integer> current_entry : current_list){
+    			src_2.highlight(18);
     			Integer current_value = current_entry.getValue();
     			if (reduced_map.containsKey(current_key)){
     				current_value = Integer.sum(current_value, reduced_map.get(current_key));
@@ -387,6 +391,7 @@ public class MapReduceGenerator implements ValidatingGenerator {
     			}
     			it++;
     			lang.nextStep();
+    			src_2.unhighlight(18);
     		}
     		it=0;
     		hor_i++;
