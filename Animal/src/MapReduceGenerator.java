@@ -5,6 +5,7 @@ import generators.framework.properties.AnimationPropertiesContainer;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -192,12 +193,18 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	SourceCodeProperties sourceCodeProps = new SourceCodeProperties();
 	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
 	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
-    	src = lang.newSourceCode(new Coordinates(450, 55), "sourceCode",
+    	src = lang.newSourceCode(new Coordinates(600, 55), "sourceCode",
 		        null, sourceCodeProps);
-    	src_2 = lang.newSourceCode(new Coordinates(450, 55), "sourceCode_2",
+    	src_2 = lang.newSourceCode(new Coordinates(600, 55), "sourceCode_2",
 		        null, sourceCodeProps);
     	this.generateSourceCode();
     	src_2.hide();
+    	
+    	//get number of words in document for array scale
+    	int doc_size = 0;
+    	for(int i=0; i<input.length; i++){
+    		doc_size += input[i].length;
+    	}
     	
     	StringArray inputArray[] = new StringArray[input.length];
     	for(int i=0; i < input.length; i++){
@@ -210,6 +217,7 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	    labelprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 12));
 	    
 	    
+	    /*############################ SPLIT #################################################*/
 	    StringArray inputArray_split[] = new StringArray[input.length];
     	
 	    int offset = input.length*26 + 90;
@@ -244,7 +252,7 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	int vert_i = 0;
     	int hor_i = 0;
     	int len_input = 0;
-    	StringArray mapArray[][] = new StringArray[input.length][100];
+    	StringArray mapArray[][] = new StringArray[input.length][doc_size];
     	
     	lang.newText(new Coordinates(100, offset), "2. Schritt: Mapping", "label:step2", null, textprops);
     	offset += 50;
@@ -282,18 +290,107 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	headline.show();
     	src_2.show();
     	hor_i = 0;
-    	offset = 55;
+    	offset = 70;
     	for (String line[] : lines){
     		Integer count = new Integer(1);	
     		vert_i = 0;
     		for (String data : line){
-        		mapArray[hor_i][vert_i] = lang.newStringArray(new Coordinates(60+hor_i*100, (offset+vert_i*30)), new String[]{data, count.toString()}, "mapArray", null, ap);
+        		mapArray[hor_i][vert_i] = lang.newStringArray(new Coordinates(60+hor_i*100, (offset+vert_i*30)), 
+        				new String[]{data, count.toString()}, "mapArray", null, ap);
     	    	vert_i++;
     		}
     		lang.newText(new Coordinates(60+hor_i*100, (offset-25)), "Sets "+(hor_i+1), "set_x", null, labelprops);
     		hor_i++;
     	}
     	lang.nextStep();
+    	
+    	
+    	
+    	/*############################ SHUFFLE #################################################*/
+    	HashMap<String, LinkedList<SimpleEntry<String, Integer>>> hashmap =
+    			new HashMap<String, LinkedList<SimpleEntry<String, Integer>>>();
+    	
+    	
+    	StringArray shuffleArray[][] = new StringArray[doc_size][doc_size];
+    	int size_x = 0;
+    	int size_y;
+    	offset += input.length*26 + 70;
+    	lang.newText(new Coordinates(100, offset), "3. Schritt: Shuffling", "label:step3", null, textprops);
+    	ArrayList<String> shuffle_index = new ArrayList<String>();
+	    offset += 20;
+	    hor_i = 0;
+	    vert_i = 0;
+    	
+    	for (LinkedList<SimpleEntry<String, Integer>> setlist : maps){
+    		for (SimpleEntry<String, Integer> set : setlist){
+    			src_2.highlight(4);
+    			mapArray[hor_i][vert_i].highlightCell(0, null, null);
+    			mapArray[hor_i][vert_i].highlightCell(1, null, null);
+    			String currentkey = set.getKey();
+    			lang.nextStep();
+    			src_2.unhighlight(4);
+    			if (hashmap.containsKey(currentkey)){
+    				src_2.highlight(7);
+    				hashmap.get(currentkey).add(set);
+    				size_x = shuffle_index.indexOf(currentkey);
+    			}
+    			else {
+    				src_2.highlight(10);
+    				size_x = hashmap.size();
+    				LinkedList<SimpleEntry<String, Integer>> newlist =
+    						new LinkedList<SimpleEntry<String, Integer>>();
+    				newlist.add(set);
+    				hashmap.put(currentkey, newlist);
+    				shuffle_index.add(currentkey);
+    				lang.newText(new Coordinates(60+size_x*100, (offset)), currentkey, "label:shuffle", null, labelprops);
+    			}
+    			size_y = hashmap.get(currentkey).size();
+    			shuffleArray[size_x][size_y] = lang.newStringArray(new Coordinates(60+size_x*100, (offset+size_y*30)),
+						new String[]{currentkey, set.getValue().toString()}, "shuffled map", null, ap);
+    			lang.nextStep();
+    			mapArray[hor_i][vert_i].unhighlightCell(0, null, null);
+    			mapArray[hor_i][vert_i].unhighlightCell(1, null, null);
+				src_2.unhighlight(7);
+				src_2.unhighlight(10);
+				vert_i++;
+    		}
+    		vert_i=0;
+    		hor_i++;
+    	}
+    	
+    	
+    	/*############################ REDUCE #################################################*/
+    	HashMap<String, Integer> reduced_map = new HashMap<String, Integer>();
+    	int shuffle_size = shuffle_index.size();
+    	StringArray reduceArray[] = new StringArray[shuffle_size];
+    	hor_i = 0;
+    	int it = 0;
+    	offset += input.length*26 + 70;
+    	lang.newText(new Coordinates(100, offset), "4. Schritt: Reducing", "label:step4", null, textprops);
+    	offset += 50;
+    	
+    	for (Entry<String, LinkedList<SimpleEntry<String, Integer>>> entry : hashmap.entrySet()) {
+    		String current_key = entry.getKey();
+    		LinkedList<SimpleEntry<String, Integer>> current_list = entry.getValue();
+		
+    		for (SimpleEntry<String,Integer> current_entry : current_list){
+    			Integer current_value = current_entry.getValue();
+    			if (reduced_map.containsKey(current_key)){
+    				current_value = Integer.sum(current_value, reduced_map.get(current_key));
+    			}
+    			reduced_map.put(current_key, current_value);
+    			if(it == 0){
+    	    		reduceArray[hor_i] = lang.newStringArray(new Coordinates(60+hor_i*100, offset),
+    						new String[]{current_key, current_value.toString()}, "reduced map", null, ap);
+    			} else {
+    				reduceArray[hor_i].put(1, current_value.toString(), null, null);
+    			}
+    			it++;
+    			lang.nextStep();
+    		}
+    		it=0;
+    		hor_i++;
+    	}
     	
     	return lang.toString();
     }
@@ -346,27 +443,27 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	    src.addCodeLine("maps.add(sets);", null, 4, null); // 13
 	    src.addCodeLine("}", null, 2, null); // 14
 	    src.addCodeLine("}", null, 0, null); // 15
-	    src_2.addCodeLine("// create a word list for each distinct ", null, 0, null); // 6
-	    src_2.addCodeLine("// word occurence (collect same words in one list) ", null, 0, null); // 7
-	    src_2.addCodeLine("shuffle(maps) {", null, 0, null); // 8
-	    src_2.addCodeLine("shuffled_map;", null, 2, null); // 9
-	    src_2.addCodeLine("for each set s in maps {", null, 2, null); // 8
-	    src_2.addCodeLine("// is there already a list for this word ?", null, 4, null); // 9
-	    src_2.addCodeLine("if(word/key of s is already in shuffled_map) {", null, 4, null); // 0
-	    src_2.addCodeLine("shuffled_map.get(word).add(s);", null, 6, null); // 1
-	    src_2.addCodeLine("} else {", null, 4, null); // 2
-	    src_2.addCodeLine("// create new list for this word", null, 6, null); // 3
-	    src_2.addCodeLine("shuffled_map.add(word);", null, 6, null); // 4
-	    src_2.addCodeLine("}", null, 4, null); // 5
-	    src_2.addCodeLine("}", null, 2, null); // 6
-	    src_2.addCodeLine("}", null, 0, null); // 7
-	    src_2.addCodeLine("// for each wordlist created in the shuffle step:", null, 0, null); // 8
-	    src_2.addCodeLine("reduce sets to one set including the number of word occurences", null, 0, null); // 9
-	    src_2.addCodeLine("reduce(shuffled_map(word)) {", null, 0, null); // 3
-	    src_2.addCodeLine("for each set in shuffled_map(word) {", null, 2, null); // 4
-	    src_2.addCodeLine("shuffled_map.increaseWordCount(count/value);", null, 4, null); // 5
-	    src_2.addCodeLine("}", null, 2, null); // 6
-	    src_2.addCodeLine("}", null, 0, null); // 7
+	    src_2.addCodeLine("// create a word list for each distinct ", null, 0, null); // 0
+	    src_2.addCodeLine("// word occurence (collect same words in one list) ", null, 0, null); // 1
+	    src_2.addCodeLine("shuffle(maps) {", null, 0, null); // 2
+	    src_2.addCodeLine("shuffled_map;", null, 2, null); // 3
+	    src_2.addCodeLine("for each set s in maps {", null, 2, null); // 4
+	    src_2.addCodeLine("// is there already a list for this word ?", null, 4, null); // 5
+	    src_2.addCodeLine("if(word/key of s is already in shuffled_map) {", null, 4, null); // 6
+	    src_2.addCodeLine("shuffled_map.get(word).add(s);", null, 6, null); // 7
+	    src_2.addCodeLine("} else {", null, 4, null); // 24
+	    src_2.addCodeLine("// create new list for this word", null, 6, null); // 8
+	    src_2.addCodeLine("shuffled_map.add(word);", null, 6, null); // 9
+	    src_2.addCodeLine("}", null, 4, null); // 10
+	    src_2.addCodeLine("}", null, 2, null); // 11
+	    src_2.addCodeLine("}", null, 0, null); // 12
+	    src_2.addCodeLine("// for each wordlist created in the shuffle step:", null, 0, null); // 13
+	    src_2.addCodeLine("// reduce sets to one set including the number of word occurences", null, 0, null); // 14
+	    src_2.addCodeLine("reduce(shuffled_map(word)) {", null, 0, null); // 15
+	    src_2.addCodeLine("for each set in shuffled_map(word) {", null, 2, null); // 16
+	    src_2.addCodeLine("shuffled_map.increaseWordCount(count/value);", null, 4, null); // 17
+	    src_2.addCodeLine("}", null, 2, null); // 18
+	    src_2.addCodeLine("}", null, 0, null); // 19
     }
     
     public static void main(String[] args) {
