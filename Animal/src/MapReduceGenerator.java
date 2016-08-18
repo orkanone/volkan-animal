@@ -29,6 +29,7 @@ import algoanim.properties.MatrixProperties;
 import algoanim.properties.SourceCodeProperties;
 import algoanim.properties.TextProperties;
 import algoanim.util.Coordinates;
+import algoanim.util.Offset;
 
 
 public class MapReduceGenerator implements ValidatingGenerator {
@@ -161,15 +162,23 @@ public class MapReduceGenerator implements ValidatingGenerator {
     }
     
     public String generate(String input_in[][]){
+    	//TODO Translator, Wizard, Parametrisierung
+    	
     	//Headline
-	    TextProperties textprops = new TextProperties();
+    	TextProperties headlineProps = new TextProperties();
+		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 18));
+    	
+    	TextProperties textprops = new TextProperties();
 	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
-	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 18));
-	    Text headline = lang.newText(new Coordinates(400, 20), "MapReduce Algorithm (Hadoop approach)", 
-	    								"Headline", null, textprops);
+	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 16));
+	    Text headline = lang.newText(new Coordinates(350, 20), "MapReduce Algorithm (Hadoop approach)", 
+	    								"Headline", null, headlineProps);
     	
     	// introduction pages in animal
-    	this.generateDescription(); //TODO description in animal
+    	this.generateDescription();
+    	
+    	headline.show();
     	
     	// get user input values
     	String input[][] = input_in;
@@ -185,11 +194,6 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	    ap.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
 	    ap.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 16));
 	    
-    	
-    	//TODO short description for each step
-    	//StringMatrix inputMatrix = lang.newStringMatrix(new Coordinates(60, 55), input, "input data", null, mp);
-    	
-    	
     	SourceCodeProperties sourceCodeProps = new SourceCodeProperties();
 	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
 	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
@@ -243,7 +247,6 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	}
     	
     	
-    	
     	/*############################ MAP #################################################*/
     	LinkedList <LinkedList<SimpleEntry<String, Integer>>> maps = 
     			new LinkedList <LinkedList<SimpleEntry<String, Integer>>>();
@@ -251,7 +254,6 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	offset += input.length*26 + 50;
     	int vert_i = 0;
     	int hor_i = 0;
-    	int len_input = 0;
     	StringArray mapArray[][] = new StringArray[input.length][doc_size];
     	
     	lang.newText(new Coordinates(100, offset), "2. Schritt: Mapping", "label:step2", null, textprops);
@@ -305,11 +307,9 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	lang.nextStep();
     	
     	
-    	
     	/*############################ SHUFFLE #################################################*/
     	HashMap<String, LinkedList<SimpleEntry<String, Integer>>> hashmap =
     			new HashMap<String, LinkedList<SimpleEntry<String, Integer>>>();
-    	
     	
     	StringArray shuffleArray[][] = new StringArray[doc_size][doc_size];
     	int size_x = 0;
@@ -397,6 +397,14 @@ public class MapReduceGenerator implements ValidatingGenerator {
     		hor_i++;
     	}
     	
+    	lang.hideAllPrimitives();
+    	
+    	//summary
+    	headline.show();
+    	generateSummary();
+    	for(int i=0; i<hor_i;i++)
+    		reduceArray[i].show();
+    	
     	return lang.toString();
     }
     
@@ -422,12 +430,115 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	 *  Im finalen Output haben wir nun k Key-Value Paare
     	 * 
     	 * */
-    	
+    	TextProperties headlineProps = new TextProperties();
+		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 16));
+		TextProperties headlineLargeProps = new TextProperties();
+		headlineLargeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 18));
+		
+		lang.newText(new Coordinates(10, 60),
+		        "Einleitung",
+		        "mapred_intro_headline", null, headlineProps);
+		
+		TextProperties textProps = new TextProperties();
+	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+	        Font.SANS_SERIF, Font.PLAIN, 16));
+	    lang.newText(new Coordinates(10, 100),
+	        "MapReduce ist ein von Google entwickeltes Modell für nebenläufige Berechnungen von großen Datensätzen.",
+	        "description1", null, textProps);
+	    lang.newText(new Offset(0, 25, "description1",
+	        AnimalScript.DIRECTION_NW),
+	        "Eine verbreitete Implementierung in Java ist Apache Hadoop.",
+	        "description2", null, textProps);
+	    lang.newText(new Offset(0, 50, "description2",
+	        AnimalScript.DIRECTION_NW),
+	        "Der Algorithmus besteht aus 4 Phasen:",
+	        "description3", null, textProps);
+	    lang.newText(new Offset(0, 25, "description3",
+	        AnimalScript.DIRECTION_NW),
+	        "1. Split",
+	        "description4", null, headlineProps);
+	    lang.newText(new Offset(0, 25, "description4",
+	        AnimalScript.DIRECTION_NW),
+	        "Der Input wird in n (Anzahl der Zeilen) Chunks geteilt",
+	        "description5", null, textProps);
+	    lang.newText(new Offset(0, 25, "description5",
+	        AnimalScript.DIRECTION_NW),
+	        "2. Map",
+	        "description6", null, headlineProps);
+	    lang.newText(new Offset(0, 25, "description6",
+		        AnimalScript.DIRECTION_NW),
+		        "Die Daten werden in eine Map übertragen; Key ist der String, Value ist die Anzahl (in diesem Schritt noch bei 1).",
+		        "description7", null, textProps);
+	    lang.newText(new Offset(0, 25, "description7",
+		        AnimalScript.DIRECTION_NW),
+		        "3. Shuffle",
+		        "description8", null, headlineProps);
+		lang.newText(new Offset(0, 25, "description8",
+			    AnimalScript.DIRECTION_NW),
+			    "Daten werden anhand des Keys sortiert, sodass k (verschiedene Daten) Chunks entstehen.",
+			    "description9", null, textProps);
+		lang.newText(new Offset(0, 25, "description9",
+		        AnimalScript.DIRECTION_NW),
+		        "Jeder Worker kann nun einen Chunk verarbeiten.",
+		        "description10", null, textProps);
+		lang.newText(new Offset(0, 25, "description10",
+		        AnimalScript.DIRECTION_NW),
+		        "4. Reduce",
+		        "description11", null, headlineProps);
+		lang.newText(new Offset(0, 25, "description11",
+			    AnimalScript.DIRECTION_NW),
+			    "Die Values der jeweiligen Keys werden addiert und auf eine Map reduziert.",
+			    "description12", null, textProps);
+		lang.newText(new Offset(0, 50, "description12",
+		        AnimalScript.DIRECTION_NW),
+		        "Im finalen Output haben wir nun k Key-Value Paare.",
+		        "description13", null, textProps);
+		
+	    lang.nextStep();
+	    lang.hideAllPrimitives();
     }
     
     
     public void generateSummary(){
-    	
+    	TextProperties headlineProps = new TextProperties();
+		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 16));
+		TextProperties headlineLargeProps = new TextProperties();
+		headlineLargeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+		        Font.SANS_SERIF, Font.BOLD, 18));
+		TextProperties textProps = new TextProperties();
+	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
+	        Font.SANS_SERIF, Font.PLAIN, 16));
+	    
+		lang.newText(new Coordinates(10, 60),
+		        "Zusammenfassung",
+		        "mapred_summary_headline", null, headlineProps);
+		lang.newText(new Coordinates(10, 100),
+		        "Es wurde das MapReduce Modell am Beispiel eines WordCount-Algorithmus dargestellt.",
+		        "description1", null, textProps);
+		    lang.newText(new Offset(0, 25, "description1",
+		        AnimalScript.DIRECTION_NW),
+		        "Generell wird MapReduce für jegliche Form der verteilten Verarbeitung großer Datensätze verwendet.",
+		        "description2", null, textProps);
+		    lang.newText(new Offset(0, 50, "description2",
+		        AnimalScript.DIRECTION_NW),
+		        "Die Algorithmus hat den eingehenden Datensatz in 4 Phasen verarbeitet.",
+		        "description3", null, textProps);
+		    lang.newText(new Offset(0, 25, "description3",
+		        AnimalScript.DIRECTION_NW),
+		        "Dabei wurden die Daten reduziert, bis nur noch die unterschiedlich vorkommenden",
+		        "description4", null, textProps);
+		    lang.newText(new Offset(0, 25, "description4",
+		        AnimalScript.DIRECTION_NW),
+		        "Worte des Input Strings und deren jeweilige Anzahl übrig blieben.",
+		        "description5", null, textProps);
+		    lang.newText(new Offset(0, 150, "description5",
+		        AnimalScript.DIRECTION_NW),
+		        "Als Ausgabe erhalten wir folgendes Ergebnis:",
+		        "description6", null, textProps);
+		    
     }
     
     
@@ -474,10 +585,14 @@ public class MapReduceGenerator implements ValidatingGenerator {
     public static void main(String[] args) {
 		MapReduceGenerator gen = new MapReduceGenerator();
 		
+		//too many inputs result in overlap with sourcecode! dunno how too fix this properly anyway.
 		String input[][] = {
 				{"Beer", "Wine", "Cider"}, 
 				{"Bourbon","Beer","Beer", "Gin"}, 
-				{"Gin","Bourbon", "Cider"}
+				{"Gin","Bourbon", "Cider"}, 
+				//{"Absinth","Rum", "Cider"},
+				//{"Beer", "Wine", "Cider"},
+				//{"Beer", "Wine", "Cider"}
 				};
 		//gen.mapReduce(input);
 		gen.init();
