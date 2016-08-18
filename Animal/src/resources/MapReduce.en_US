@@ -1,0 +1,51 @@
+noSuchKeyException=There is no resource for the key {0}
+iconNotFound=Icon {0} not found
+
+# General
+algorithmName=MapReduce Algorithm
+
+# Description
+descriptionParagraph1=The backward algorithm calculates the probabilities in a given hidden Markov model to observe an input sequence. A sequence is a set of symbols, which can be created by the HMM \u0028emissions\u0029. Contrary to the forward algorithm the backward algorithm utilizes the backward probabilities and computes the input sequence in a reversed order. The transition probabilities, the emission probabilities and the start states are given.
+descriptionParagraph2=Hidden Markov models are used in many different areas, such as natural language processing, bioinformatics, or robotics.
+
+
+# TableOfContents
+intro=Introduction
+outro=Recap
+
+# Algorithm
+step1=Step 1: Splitting
+step2=Step 2: Mapping
+step3=Step 3: Shuffling
+step4=Step 4: Reducing
+
+# Source Code
+sourceComment1=split between every line in the document
+sourceComment2=map every word to a key-value pair, where key is the word
+sourceComment3=and value the number of occurences (here always 1)
+sourceComment4=create a word list for each distinct
+sourceComment5=word occurence (collect same words in one list)
+sourceComment6=is there already a list for this word ?
+sourceComment7=create new list for this word
+sourceComment8=for each wordlist created in the shuffle step:
+sourceComment9=reduce sets to one set including the number of word occurences
+
+# Introduction Slide 1
+intro1=MapReduce is a model for parallel processing of large datasets developed by Google. 
+intro2=A common implementation in Java is Apache Hadoop.
+intro3=The Algorithm consists of 4 phases:
+intro4=The input is divided into n (sum of lines) chunks
+intro5=The data is mapped: Key is the string (word), value its quantity (in this step 1)
+intro6=The data is sorted based on its keys. This will lead to k (number of distinct words) chunks.
+intro7=Every worker can now process one chunk.
+intro8=The values of the keys are summed up and reduced to one map.
+intro9=The final output consists of k key-value pairs, where value is the word count.
+		
+# Recap
+recap=Recap \u0028End of algorithm\u0029
+outro1=The MapReduce model was demonstrated using the example of a WordCount-Algorithm.
+outro2=In general MapReduce is used for many forms of processing large datasets.
+outro3=The Algorithm processed the input dataset in 4 phases.
+outro4=The data was reduced, until only one mapping per distinct
+outro5=occuring word and its quantity were left.
+outro6=We obtain the following result:

@@ -1,0 +1,55 @@
+noSuchKeyException=Keine Ressource f\u00fcr Key {0} vorhanden
+iconNotFound=Icon {0} nicht gefunden
+
+# General
+algorithmName=MapReduce Algorithmus
+
+# Overview
+descriptionParagraph1=Der Backward-Algorithmus berechnet die Wahrscheinlichkeit, eine bestimmte Symbolsequenz in einem gegebenen Hidden-Markov-Model \u0028HMM\u0029 zu beobachten. Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann \u0028Emissionen\u0029. Anders als beim Forward-Algorithmus werden hier die Backward-Variablen verwendet, die Sequenz wird r\u00fcckw\u00e4rts verarbeitet. Dabei werden der Anfangszustand des HMM sowie die Transitionsmatrix A und die Emissionsmatrix B als gegeben betrachtet.
+descriptionParagraph2=Hidden Markov Models werden in vielen Gebieten, wie beispielsweise im Natural Language Processing, in der Bioinformatik oder in der Robotik, verwendet.
+
+
+# TableOfContents
+intro=Einleitung
+outro=Zusammenfassung
+
+# Algorithm
+step1=Schritt 1: Splitting
+step2=Schritt 2: Mapping
+step3=Schritt 3: Shuffling
+step4=Schritt 4: Reducing
+
+# Source Code
+sourceComment1=Teile die einzelnen Linien des Dokuments (der Eingabe) auf
+sourceComment2=Mappe jedes Wort auf ein Schlüssel-Wert-Paar, wobei Schlüssel
+sourceComment3=das jeweilige Wort und Wert die Häufigkeit ist (hier immer 1)
+sourceComment4=Erstelle eine Wortliste für jedes unterschiedlich
+sourceComment5=vorkommende Wort (=>sammle gleiche Worte in einer Liste)
+sourceComment6=Gibt es bereits eine Liste für dieses Wort?
+sourceComment7=Erstelle eine neue Liste für dieses Wort
+sourceComment8=Für jede Wortliste, die im "Shuffling" Schritt erstellt wurde:
+sourceComment9=Reduziere auf ein Schlüssel-Wert-Paar, wobei Wert die gesamte Worthäufigkeit ist
+
+# Introduction Slide 1
+intro1=MapReduce ist ein von Google entwickeltes Modell für nebenläufige Berechnungen von großen Datensätzen.
+intro2=Eine verbreitete Implementierung in Java ist Apache Hadoop.
+intro3=Der Algorithmus besteht aus 4 Phasen:
+intro4=Der Input wird in n (Anzahl der Zeilen) Chunks geteilt
+intro5=Die Daten werden in eine Map übertragen: Key ist der String, Value ist die Anzahl (in diesem Schritt noch bei 1).
+intro6=Daten werden anhand des Keys sortiert, sodass k (verschiedene Daten) Chunks entstehen.
+intro7=Jeder Worker kann nun einen Chunk verarbeiten.
+intro8=Die Values der jeweiligen Keys werden addiert und auf eine Map reduziert.
+intro9=Im finalen Output haben wir nun k Key-Value Paare.
+
+# Recap
+recap=Zusammenfassung \u0028Ende des Algorithmus\u0029
+outro1=Es wurde das MapReduce Modell am Beispiel eines WordCount-Algorithmus dargestellt.
+outro2=Generell wird MapReduce für jegliche Form der verteilten Verarbeitung großer Datensätze verwendet.
+outro3=Der Algorithmus hat den eingehenden Datensatz in 4 Phasen verarbeitet.
+outro4=Dabei wurden die Daten reduziert, bis nur noch die unterschiedlich vorkommenden
+outro5=Worte des Input Strings und deren jeweilige Anzahl übrig blieben.
+outro6=Als Ausgabe erhalten wir folgendes Ergebnis:
+
+#( = \u0028
+#) = \u0029
+#

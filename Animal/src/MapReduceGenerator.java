@@ -44,8 +44,9 @@ public class MapReduceGenerator implements ValidatingGenerator {
     
     public MapReduceGenerator(Locale locale) {
     	this.generatorLocale = locale;
-    	translator = new Translator("resources/BackwardAlgorithm", locale);
+    	translator = new Translator("resources/MapReduce", locale);
     }
+    
     public MapReduceGenerator(){
     	
     }
@@ -225,9 +226,9 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	    StringArray inputArray_split[] = new StringArray[input.length];
     	
 	    int offset = input.length*26 + 90;
-	    lang.newText(new Coordinates(100, offset), "1. Schritt: Input Split", "label:step1", null, textprops);
+	    lang.newText(new Coordinates(100, offset), "1. Schritt: Input Split", "label:step1", null, textprops); //translator.translateMessage("step1")
 	    offset += 50;
-	    //Splitting
+
     	lines = new LinkedList<String[]>();
     	for(int i=0; i < input.length; i++){
     		src.highlight(2);
@@ -256,7 +257,7 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	int hor_i = 0;
     	StringArray mapArray[][] = new StringArray[input.length][doc_size];
     	
-    	lang.newText(new Coordinates(100, offset), "2. Schritt: Mapping", "label:step2", null, textprops);
+    	lang.newText(new Coordinates(100, offset), "2. Schritt: Mapping", "label:step2", null, textprops); //translator.translateMessage("step2")
     	offset += 50;
     	for (String line[] : lines){
     		Integer count = new Integer(1);	
@@ -315,7 +316,7 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	int size_x = 0;
     	int size_y;
     	offset += input.length*26 + 70;
-    	lang.newText(new Coordinates(100, offset), "3. Schritt: Shuffling", "label:step3", null, textprops);
+    	lang.newText(new Coordinates(100, offset), "3. Schritt: Shuffling", "label:step3", null, textprops); //translator.translateMessage("step3")
     	ArrayList<String> shuffle_index = new ArrayList<String>();
 	    offset += 20;
 	    hor_i = 0;
@@ -366,7 +367,7 @@ public class MapReduceGenerator implements ValidatingGenerator {
     	hor_i = 0;
     	int it = 0;
     	offset += input.length*26 + 70;
-    	lang.newText(new Coordinates(100, offset), "4. Schritt: Reducing", "label:step4", null, textprops);
+    	lang.newText(new Coordinates(100, offset), "4. Schritt: Reducing", "label:step4", null, textprops); //translator.translateMessage("step4")
     	offset += 50;
     	
     	for (Entry<String, LinkedList<SimpleEntry<String, Integer>>> entry : hashmap.entrySet()) {
@@ -438,22 +439,22 @@ public class MapReduceGenerator implements ValidatingGenerator {
 		        Font.SANS_SERIF, Font.BOLD, 18));
 		
 		lang.newText(new Coordinates(10, 60),
-		        "Einleitung",
+		        "Einleitung", //translator.translateMessage("intro")
 		        "mapred_intro_headline", null, headlineProps);
 		
 		TextProperties textProps = new TextProperties();
 	    textProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 	        Font.SANS_SERIF, Font.PLAIN, 16));
 	    lang.newText(new Coordinates(10, 100),
-	        "MapReduce ist ein von Google entwickeltes Modell für nebenläufige Berechnungen von großen Datensätzen.",
+	        "MapReduce ist ein von Google entwickeltes Modell für nebenläufige Berechnungen von großen Datensätzen.", //translator.translateMessage("intro1")
 	        "description1", null, textProps);
 	    lang.newText(new Offset(0, 25, "description1",
 	        AnimalScript.DIRECTION_NW),
-	        "Eine verbreitete Implementierung in Java ist Apache Hadoop.",
+	        "Eine verbreitete Implementierung in Java ist Apache Hadoop.", //translator.translateMessage("intro2")
 	        "description2", null, textProps);
 	    lang.newText(new Offset(0, 50, "description2",
 	        AnimalScript.DIRECTION_NW),
-	        "Der Algorithmus besteht aus 4 Phasen:",
+	        "Der Algorithmus besteht aus 4 Phasen:", //translator.translateMessage("intro3")
 	        "description3", null, textProps);
 	    lang.newText(new Offset(0, 25, "description3",
 	        AnimalScript.DIRECTION_NW),
@@ -461,40 +462,40 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	        "description4", null, headlineProps);
 	    lang.newText(new Offset(0, 25, "description4",
 	        AnimalScript.DIRECTION_NW),
-	        "Der Input wird in n (Anzahl der Zeilen) Chunks geteilt",
+	        "Der Input wird in n (Anzahl der Zeilen) Chunks geteilt", //translator.translateMessage("intro4")
 	        "description5", null, textProps);
 	    lang.newText(new Offset(0, 25, "description5",
 	        AnimalScript.DIRECTION_NW),
 	        "2. Map",
 	        "description6", null, headlineProps);
 	    lang.newText(new Offset(0, 25, "description6",
-		        AnimalScript.DIRECTION_NW),
-		        "Die Daten werden in eine Map übertragen; Key ist der String, Value ist die Anzahl (in diesem Schritt noch bei 1).",
-		        "description7", null, textProps);
+		    AnimalScript.DIRECTION_NW),
+		    "Die Daten werden in eine Map übertragen; Key ist der String, Value ist die Anzahl (in diesem Schritt noch bei 1).", //translator.translateMessage("intro5")
+		    "description7", null, textProps);
 	    lang.newText(new Offset(0, 25, "description7",
-		        AnimalScript.DIRECTION_NW),
-		        "3. Shuffle",
-		        "description8", null, headlineProps);
+		    AnimalScript.DIRECTION_NW),
+		    "3. Shuffle",
+		    "description8", null, headlineProps);
 		lang.newText(new Offset(0, 25, "description8",
-			    AnimalScript.DIRECTION_NW),
-			    "Daten werden anhand des Keys sortiert, sodass k (verschiedene Daten) Chunks entstehen.",
-			    "description9", null, textProps);
+			AnimalScript.DIRECTION_NW),
+			"Daten werden anhand des Keys sortiert, sodass k (verschiedene Daten) Chunks entstehen.", //translator.translateMessage("intro6")
+			"description9", null, textProps);
 		lang.newText(new Offset(0, 25, "description9",
-		        AnimalScript.DIRECTION_NW),
-		        "Jeder Worker kann nun einen Chunk verarbeiten.",
-		        "description10", null, textProps);
+		     AnimalScript.DIRECTION_NW),
+		     "Jeder Worker kann nun einen Chunk verarbeiten.", //translator.translateMessage("intro7")
+		     "description10", null, textProps);
 		lang.newText(new Offset(0, 25, "description10",
-		        AnimalScript.DIRECTION_NW),
-		        "4. Reduce",
-		        "description11", null, headlineProps);
+		     AnimalScript.DIRECTION_NW),
+		     "4. Reduce",
+		     "description11", null, headlineProps);
 		lang.newText(new Offset(0, 25, "description11",
-			    AnimalScript.DIRECTION_NW),
-			    "Die Values der jeweiligen Keys werden addiert und auf eine Map reduziert.",
-			    "description12", null, textProps);
+			 AnimalScript.DIRECTION_NW),
+			 "Die Values der jeweiligen Keys werden addiert und auf eine Map reduziert.", //translator.translateMessage("intro8")
+			 "description12", null, textProps);
 		lang.newText(new Offset(0, 50, "description12",
-		        AnimalScript.DIRECTION_NW),
-		        "Im finalen Output haben wir nun k Key-Value Paare.",
-		        "description13", null, textProps);
+		     AnimalScript.DIRECTION_NW),
+		     "Im finalen Output haben wir nun k Key-Value Paare.", //translator.translateMessage("intro9")
+		     "description13", null, textProps);
 		
 	    lang.nextStep();
 	    lang.hideAllPrimitives();
@@ -513,44 +514,44 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	        Font.SANS_SERIF, Font.PLAIN, 16));
 	    
 		lang.newText(new Coordinates(10, 60),
-		        "Zusammenfassung",
+		        "Zusammenfassung", //translator.translateMessage("recap")
 		        "mapred_summary_headline", null, headlineProps);
 		lang.newText(new Coordinates(10, 100),
-		        "Es wurde das MapReduce Modell am Beispiel eines WordCount-Algorithmus dargestellt.",
+		        "Es wurde das MapReduce Modell am Beispiel eines WordCount-Algorithmus dargestellt.", //translator.translateMessage("outro1")
 		        "description1", null, textProps);
 		    lang.newText(new Offset(0, 25, "description1",
 		        AnimalScript.DIRECTION_NW),
-		        "Generell wird MapReduce für jegliche Form der verteilten Verarbeitung großer Datensätze verwendet.",
+		        "Generell wird MapReduce für jegliche Form der verteilten Verarbeitung großer Datensätze verwendet.", //translator.translateMessage("outro2")
 		        "description2", null, textProps);
 		    lang.newText(new Offset(0, 50, "description2",
 		        AnimalScript.DIRECTION_NW),
-		        "Die Algorithmus hat den eingehenden Datensatz in 4 Phasen verarbeitet.",
+		        "Der Algorithmus hat den eingehenden Datensatz in 4 Phasen verarbeitet.", //translator.translateMessage("outro3")
 		        "description3", null, textProps);
 		    lang.newText(new Offset(0, 25, "description3",
 		        AnimalScript.DIRECTION_NW),
-		        "Dabei wurden die Daten reduziert, bis nur noch die unterschiedlich vorkommenden",
+		        "Dabei wurden die Daten reduziert, bis nur noch die unterschiedlich vorkommenden", //translator.translateMessage("outro4")
 		        "description4", null, textProps);
 		    lang.newText(new Offset(0, 25, "description4",
 		        AnimalScript.DIRECTION_NW),
-		        "Worte des Input Strings und deren jeweilige Anzahl übrig blieben.",
+		        "Worte des Input Strings und deren jeweilige Anzahl übrig blieben.", //translator.translateMessage("outro5")
 		        "description5", null, textProps);
 		    lang.newText(new Offset(0, 150, "description5",
 		        AnimalScript.DIRECTION_NW),
-		        "Als Ausgabe erhalten wir folgendes Ergebnis:",
+		        "Als Ausgabe erhalten wir folgendes Ergebnis:", //translator.translateMessage("outro6")
 		        "description6", null, textProps);
 		    
     }
     
     
     private void generateSourceCode(){ 
-    	src.addCodeLine("// split between every line in the document", null, 0, null); // 0
+    	src.addCodeLine("// split between every line in the document", null, 0, null); // 0 //translator.translateMessage("sourceComment1")
 		src.addCodeLine("split(String document) {", null, 0, null); // 1
 	    src.addCodeLine("for each line l in document {", null, 2, null); // 2
 	    src.addCodeLine("lines.add(l);", null, 4, null); // 3
 	    src.addCodeLine("}", null, 2, null); // 4
 	    src.addCodeLine("}", null, 0, null); // 5
-	    src.addCodeLine("// map every word to a key-value pair, where key is the word ", null, 0, null); // 6
-	    src.addCodeLine("// and value the number of occurences (here always 1) ", null, 0, null); // 7
+	    src.addCodeLine("// map every word to a key-value pair, where key is the word ", null, 0, null); // 6 //translator.translateMessage("sourceComment2")
+	    src.addCodeLine("// and value the number of occurences (here always 1) ", null, 0, null); // 7 //translator.translateMessage("sourceComment3")
 	    src.addCodeLine("map(String[] lines) {", null, 0, null); // 8
 	    src.addCodeLine("for each line l in lines {", null, 2, null); // 9
 	    src.addCodeLine("for each word w in l {", null, 4, null); // 10
@@ -559,22 +560,22 @@ public class MapReduceGenerator implements ValidatingGenerator {
 	    src.addCodeLine("maps.add(sets);", null, 4, null); // 13
 	    src.addCodeLine("}", null, 2, null); // 14
 	    src.addCodeLine("}", null, 0, null); // 15
-	    src_2.addCodeLine("// create a word list for each distinct ", null, 0, null); // 0
-	    src_2.addCodeLine("// word occurence (collect same words in one list) ", null, 0, null); // 1
+	    src_2.addCodeLine("// create a word list for each distinct ", null, 0, null); // 0 //translator.translateMessage("sourceComment4")
+	    src_2.addCodeLine("// word occurence (collect same words in one list) ", null, 0, null); // 1 //translator.translateMessage("sourceComment5")
 	    src_2.addCodeLine("shuffle(maps) {", null, 0, null); // 2
 	    src_2.addCodeLine("shuffled_map;", null, 2, null); // 3
 	    src_2.addCodeLine("for each set s in maps {", null, 2, null); // 4
-	    src_2.addCodeLine("// is there already a list for this word ?", null, 4, null); // 5
+	    src_2.addCodeLine("// is there already a list for this word ?", null, 4, null); // 5 //translator.translateMessage("sourceComment6")
 	    src_2.addCodeLine("if(word/key of s is already in shuffled_map) {", null, 4, null); // 6
 	    src_2.addCodeLine("shuffled_map.get(word).add(s);", null, 6, null); // 7
 	    src_2.addCodeLine("} else {", null, 4, null); // 24
-	    src_2.addCodeLine("// create new list for this word", null, 6, null); // 8
+	    src_2.addCodeLine("// create new list for this word", null, 6, null); // 8 //translator.translateMessage("sourceComment7")
 	    src_2.addCodeLine("shuffled_map.add(word);", null, 6, null); // 9
 	    src_2.addCodeLine("}", null, 4, null); // 10
 	    src_2.addCodeLine("}", null, 2, null); // 11
 	    src_2.addCodeLine("}", null, 0, null); // 12
-	    src_2.addCodeLine("// for each wordlist created in the shuffle step:", null, 0, null); // 13
-	    src_2.addCodeLine("// reduce sets to one set including the number of word occurences", null, 0, null); // 14
+	    src_2.addCodeLine("// for each wordlist created in the shuffle step:", null, 0, null); // 13 //translator.translateMessage("sourceComment8")
+	    src_2.addCodeLine("// reduce sets to one set including the number of word occurences", null, 0, null); // 14 //translator.translateMessage("sourceComment9")
 	    src_2.addCodeLine("reduce(shuffled_map(word)) {", null, 0, null); // 15
 	    src_2.addCodeLine("for each set in shuffled_map(word) {", null, 2, null); // 16
 	    src_2.addCodeLine("shuffled_map.increaseWordCount(count/value);", null, 4, null); // 17
