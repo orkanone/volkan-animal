@@ -3,10 +3,11 @@ iconNotFound=Icon {0} nicht gefunden
 
 # General
 algorithmName=MapReduce Algorithmus
+name=MapReduce
 
 # Overview
-descriptionParagraph1=Der Backward-Algorithmus berechnet die Wahrscheinlichkeit, eine bestimmte Symbolsequenz in einem gegebenen Hidden-Markov-Model \u0028HMM\u0029 zu beobachten. Eine Sequenz ist dabei eine Abfolge von Symbolen, die durch ein HMM erzeugt werden kann \u0028Emissionen\u0029. Anders als beim Forward-Algorithmus werden hier die Backward-Variablen verwendet, die Sequenz wird r\u00fcckw\u00e4rts verarbeitet. Dabei werden der Anfangszustand des HMM sowie die Transitionsmatrix A und die Emissionsmatrix B als gegeben betrachtet.
-descriptionParagraph2=Hidden Markov Models werden in vielen Gebieten, wie beispielsweise im Natural Language Processing, in der Bioinformatik oder in der Robotik, verwendet.
+descriptionParagraph1=MapReduce ist ein Modell, das f&uuml;r nebenl&auml;ufige Berechnungen verwendet wird. Das Verfahren wurde von Google zur Verarbeitung von gro&szlig;en Datenmengen entwickelt, sodass die Verarbeitung dieser parallel und verteilt durchgef&uuml;hrt werden kann.
+descriptionParagraph2=In diesem Beispiel wird die generelle Funktionsweise vom MapReduce-Verfahren in Pseudocode anhand eines Wordcount Algorithmus gezeigt. Eine bekannte Implementierung des MapReduce-Verfahrens in Java ist Apache Hadoop.
 
 
 # TableOfContents

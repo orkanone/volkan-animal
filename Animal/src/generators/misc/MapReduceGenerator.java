@@ -1,41 +1,50 @@
+/*
+ * MapReduceGenerator.java
+ * Volker Hartmann, Orkan Özyurt, 2016 for the Animal project at TU Darmstadt.
+ * Copying this file for educational purposes is permitted without further authorization.
+ */
+package generators.misc;
+
 import generators.framework.Generator;
 import generators.framework.GeneratorType;
-import generators.framework.ValidatingGenerator;
-import generators.framework.properties.AnimationPropertiesContainer;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
+
+import algoanim.primitives.SourceCode;
+import algoanim.primitives.StringArray;
+import algoanim.primitives.Text;
+import algoanim.primitives.generators.Language;
+
+import java.util.Hashtable;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import translator.Translator;
+import generators.framework.properties.AnimationPropertiesContainer;
 import algoanim.animalscript.AnimalScript;
-import algoanim.primitives.SourceCode;
-import algoanim.primitives.StringArray;
-import algoanim.primitives.StringMatrix;
-import algoanim.primitives.Text;
-import algoanim.primitives.generators.Language;
 import algoanim.properties.AnimationPropertiesKeys;
-import algoanim.properties.ArrayProperties;
 import algoanim.properties.MatrixProperties;
-import algoanim.properties.SourceCodeProperties;
 import algoanim.properties.TextProperties;
+import algoanim.properties.SourceCodeProperties;
+import algoanim.properties.ArrayProperties;
 import algoanim.util.Coordinates;
 import algoanim.util.Offset;
 
-
-public class MapReduceGenerator  {
-	private SourceCode src;
-	private SourceCode src_2;
+public class MapReduceGenerator implements Generator {
     private Language lang;
+    private MatrixProperties mp;
+    private String[][] input_in;
+    private TextProperties textprops;
+    private SourceCodeProperties sourceCodeProps;
+    private ArrayProperties ap;
+    
+    private SourceCode src;
+	private SourceCode src_2;
     
     private LinkedList<String[]> lines;
     
@@ -50,150 +59,37 @@ public class MapReduceGenerator  {
     public MapReduceGenerator(){
     	
     }
-    
+
     public void init(){
     	lang = new AnimalScript("MapReduce", "Volker Hartmann, Orkan Özyurt", 800, 600);
     	lang.setStepMode(true);
     }
 
-    //n Anzahl der Zeilen
-    //k Anzahl der Worker Maps
-    public void mapReduce(String[][] input){
-    	
-    	System.out.println("---------Input---------");
-    	for(String[] line : input){
-    		for (String data : line){
-    			System.out.print(data + " ");;
-    		}
-    		System.out.println();
-    	}
-    	
-    	/*############################ SPLIT #################################################*/
-    	System.out.println("---------Split---------");
-    	lines = new LinkedList<String[]>();
-    	for(int i=0; i < input.length; i++){
-    		lines.add(input[i]); 
-    		
-    		//Print result
-    		System.out.print("Line " + i + ": " );
-    		for(String data : input[i]){
-    			System.out.print(data + " ");
-    		}
-    		System.out.println();
-    	}
-    	
-    	/*############################ MAP #################################################*/
-    	System.out.println("---------Map---------");
-    	/*
-    	 *  Java does not support Maps with duplicate values, so we do not actually map in this step.
-    	 *  This makes it easier to properly display the results for our purposes.
-    	*/
-    	LinkedList <LinkedList<SimpleEntry<String, Integer>>> maps = 
-    			new LinkedList <LinkedList<SimpleEntry<String, Integer>>>();
-    	
-    	for (String line[] : lines){
-    		Integer count = new Integer(1);	
-    		LinkedList<SimpleEntry<String, Integer>> sets = 
-    				new LinkedList<SimpleEntry<String, Integer>>();
-    		for (String data : line){
-    			sets.add(new SimpleEntry<String,Integer>(data, count));
-    		}
-    		maps.add(sets);
-    	}
-    	
-    	//Print----
-    	for (LinkedList<SimpleEntry<String, Integer>> setlist : maps){
-    		for (SimpleEntry<String, Integer> set : setlist){
-    			System.out.println(set.getKey() + ", " + set.getValue());
-    		}
-    		System.out.println("---");
-    	}
-    	   	
-    	/*############################ SHUFFLE #################################################*/
-    	System.out.println("---------Shuffle---------");
-    	HashMap<String, LinkedList<SimpleEntry<String, Integer>>> hashmap =
-    			new HashMap<String, LinkedList<SimpleEntry<String, Integer>>>();
-    	
-    	for (LinkedList<SimpleEntry<String, Integer>> setlist : maps){
-    		for (SimpleEntry<String, Integer> set : setlist){
-    			String currentkey = set.getKey();
-    			if (hashmap.containsKey(currentkey)){
-    				hashmap.get(currentkey).add(set);
-    			}
-    			else {
-    				LinkedList<SimpleEntry<String, Integer>> newlist =
-    						new LinkedList<SimpleEntry<String, Integer>>();
-    				newlist.add(set);
-    				hashmap.put(currentkey, newlist);
-    			}
-    		}
-    	}
-
-    	//Print---
-    	for (Entry<String, LinkedList<SimpleEntry<String, Integer>>> entry : hashmap.entrySet()) {
-    	    System.out.println(entry.getKey() + " = " + entry.getValue());
-    	}
-    	
-    	/*############################ REDUCE #################################################*/
-    	System.out.println("---------Reduce---------");
-    	HashMap<String, Integer> reduced_map = new HashMap<String, Integer>();
-    	
-    	for (Entry<String, LinkedList<SimpleEntry<String, Integer>>> entry : hashmap.entrySet()) {
-    		String current_key = entry.getKey();
-    		LinkedList<SimpleEntry<String, Integer>> current_list = entry.getValue();
-    		
-    		for (SimpleEntry<String,Integer> current_entry : current_list){
-    			Integer current_value = current_entry.getValue();
-    			if (reduced_map.containsKey(current_key)){
-    				current_value = Integer.sum(current_value, reduced_map.get(current_key));
-    			}
-    			reduced_map.put(current_key, current_value);
-    		}
-    	}
-    	
-    	//Print---
-    	for (Entry<String,Integer> entry : reduced_map.entrySet()) {
-    	    System.out.println(entry.getKey() + " = " + entry.getValue());
-    	}
-	    
-    }
-    
-    public String generate(String input_in[][]){
-    	//TODO Translator, Wizard, Parametrisierung
-    	
+    public String generate(AnimationPropertiesContainer props,Hashtable<String, Object> primitives) {
+        mp = (MatrixProperties)props.getPropertiesByName("mp");
+        input_in = (String[][])primitives.get("input_in");
+        textprops = (TextProperties)props.getPropertiesByName("textprops");
+        sourceCodeProps = (SourceCodeProperties)props.getPropertiesByName("sourceCodeProps");
+        ap = (ArrayProperties)props.getPropertiesByName("ap");
+        
     	//Headline
     	TextProperties headlineProps = new TextProperties();
 		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
 		        Font.SANS_SERIF, Font.BOLD, 18));
+		
+		Text headline = lang.newText(new Coordinates(350, 20), "MapReduce Algorithm (Hadoop approach)", 
+				"Headline", null, headlineProps);
     	
-    	TextProperties textprops = new TextProperties();
 	    textprops.set(AnimationPropertiesKeys.CENTERED_PROPERTY, true);
-	    textprops.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.BOLD, 16));
-	    Text headline = lang.newText(new Coordinates(350, 20), "MapReduce Algorithm (Hadoop approach)", 
-	    								"Headline", null, headlineProps);
-    	
     	// introduction pages in animal
     	this.generateDescription();
     	
     	headline.show();
-    	
-    	// get user input values
     	String input[][] = input_in;
-    	MatrixProperties mp = new MatrixProperties();
-		mp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
-		mp.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
-	    mp.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
-	    mp.set(AnimationPropertiesKeys.GRID_STYLE_PROPERTY, "matrix");
     	
-    	ArrayProperties ap = new ArrayProperties();
-		ap.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
-		ap.set(AnimationPropertiesKeys.ELEMHIGHLIGHT_PROPERTY, Color.RED);
-	    ap.set(AnimationPropertiesKeys.CELLHIGHLIGHT_PROPERTY, Color.YELLOW);
-	    ap.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-	    
-    	SourceCodeProperties sourceCodeProps = new SourceCodeProperties();
-	    sourceCodeProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(Font.MONOSPACED, Font.PLAIN, 14));
-	    sourceCodeProps.set(AnimationPropertiesKeys.HIGHLIGHTCOLOR_PROPERTY, Color.RED);
+		mp.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
+    	ap.set(AnimationPropertiesKeys.FILL_PROPERTY, Color.WHITE);
+		
     	src = lang.newSourceCode(new Coordinates(600, 55), "sourceCode",
 		        null, sourceCodeProps);
     	src_2 = lang.newSourceCode(new Coordinates(600, 55), "sourceCode_2",
@@ -406,7 +302,7 @@ public class MapReduceGenerator  {
     }
     
     public void generateDescription(){
-    
+        
     	/*
     	 * MapReduce ist ein von Google entwickeltes Modell für nebenläufige Berechnungen von großen Datensätzen 
     	 * Eine verbreitete Implementierung in Java ist Apache Hadoop.
@@ -497,7 +393,6 @@ public class MapReduceGenerator  {
 	    lang.hideAllPrimitives();
     }
     
-    
     public void generateSummary(){
     	TextProperties headlineProps = new TextProperties();
 		headlineProps.set(AnimationPropertiesKeys.FONT_PROPERTY, new Font(
@@ -537,8 +432,7 @@ public class MapReduceGenerator  {
 		        "description6", null, textProps);
 		    
     }
-    
-    
+
     private void generateSourceCode(){ 
     	src.addCodeLine("// split between every line in the document", null, 0, null); // 0 //translator.translateMessage("sourceComment1")
 		src.addCodeLine("split(String document) {", null, 0, null); // 1
@@ -579,20 +473,113 @@ public class MapReduceGenerator  {
 	    src_2.addCodeLine("}", null, 0, null); // 19
     }
     
-    public static void main(String[] args) {
-		MapReduceGenerator gen = new MapReduceGenerator();
-		
-		//too many inputs result in overlap with sourcecode! dunno how too fix this properly anyway.
-		String input[][] = {
-				{"Beer", "Wine", "Cider"}, 
-				{"Bourbon","Beer","Beer", "Gin"}, 
-				{"Gin","Bourbon", "Cider"}, 
-				//{"Absinth","Rum", "Cider"},
-				//{"Beer", "Wine", "Cider"},
-				//{"Beer", "Wine", "Cider"}
-				};
-		//gen.mapReduce(input);
-		gen.init();
-		System.out.println(gen.generate(input));
-	}
+    public String getName() {
+        return this.translator.translateMessage("name");
+    }
+
+    public String getAlgorithmName() {
+        return this.translator.translateMessage("algorithmName");
+    }
+
+    public String getAnimationAuthor() {
+        return "Volker Hartmann, Orkan Özyurt";
+    }
+
+    public String getDescription(){
+        return this.translator.translateMessage("descriptionParagraph1") +"\n"
+        		+ this.translator.translateMessage("descriptionParagraph2");
+    }
+
+    public String getCodeExample(){
+        return "// split between every line in the document"
+ +"\n"
+ +"split(String document) {"
+ +"\n"
+ +"for each line l in document {"
+ +"\n"
+ +"lines.add(l);"
+ +"\n"
+ +"}"
+ +"\n"
+ +"}"
+ +"\n"
+ +"// map every word to a key-value pair, where key is the word"
+ +"\n"
+ +"// and value the number of occurences (here always 1)"
+ +"\n"
+ +"map(String[] lines) {"
+ +"\n"
+ +"for each line l in lines {"
+ +"\n"
+ +"for each word w in l {"
+ +"\n"
+ +"sets.add(w/key, count/value);"
+ +"\n"
+ +"}"
+ +"\n"
+ +"maps.add(sets);"
+ +"\n"
+ +"}"
+ +"\n"
+ +"}"
+ +"\n"
+ +"// create a word list for each distinct"
+ +"\n"
+ +"// word occurence (collect same words in one list)"
+ +"\n"
+ +"shuffle(maps) {"
+ +"\n"
+ +"shuffled_map;"
+ +"\n"
+ +"for each set s in maps {"
+ +"\n"
+ +"// is there already a list for this word ?"
+ +"\n"
+ +"if(word/key of s is already in shuffled_map) {"
+ +"\n"
+ +"shuffled_map.get(word).add(s);"
+ +"\n"
+ +"} else {"
+ +"\n"
+ +"// create new list for this word"
+ +"\n"
+ +"shuffled_map.add(word);"
+ +"\n"
+ +"}"
+ +"\n"
+ +"}"
+ +"\n"
+ +"}"
+ +"\n"
+ +"// for each wordlist created in the shuffle step:"
+ +"\n"
+ +"// reduce sets to one set including the number of word occurences"
+ +"\n"
+ +"reduce(shuffled_map(word) {"
+ +"\n"
+ +"for each set in shuffled_map(word) {"
+ +"\n"
+ +"shuffled_map.increaseWordCount(count/value);"
+ +"\n"
+ +"}"
+ +"\n"
+ +"} ";
+    }
+
+    public String getFileExtension(){
+        return "asu";
+    }
+
+    public Locale getContentLocale() {
+        return this.generatorLocale;
+    }
+
+    public GeneratorType getGeneratorType() {
+        return new GeneratorType(GeneratorType.GENERATOR_TYPE_MORE);
+    }
+
+    public String getOutputLanguage() {
+        return Generator.PSEUDO_CODE_OUTPUT;
+    }
+
 }

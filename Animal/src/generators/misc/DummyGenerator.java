@@ -31,7 +31,8 @@ public class DummyGenerator implements GeneratorBundle {
     generators.add(new VariableDemo());
     generators.add(new BackwardAlgorithmGenerator(Locale.GERMANY));
     generators.add(new BackwardAlgorithmGenerator(Locale.US));
-    
+    generators.add(new MapReduceGenerator(Locale.GERMANY));
+    generators.add(new MapReduceGenerator(Locale.US));
     
     // TODO "under probation"
     // generators.add(new Choly());
