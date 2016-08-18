@@ -19,17 +19,18 @@ step1=Schritt 1: Splitting
 step2=Schritt 2: Mapping
 step3=Schritt 3: Shuffling
 step4=Schritt 4: Reducing
+line=Zeile
 
 # Source Code
 sourceComment1=Teile die einzelnen Linien des Dokuments (der Eingabe) auf
-sourceComment2=Mappe jedes Wort auf ein Schlüssel-Wert-Paar, wobei Schlüssel
-sourceComment3=das jeweilige Wort und Wert die Häufigkeit ist (hier immer 1)
+sourceComment2=Mappe jedes Wort auf ein Key-Value-Paar, wobei Key
+sourceComment3=das jeweilige Wort und Value die Häufigkeit ist (hier immer 1)
 sourceComment4=Erstelle eine Wortliste für jedes unterschiedlich
 sourceComment5=vorkommende Wort (=>sammle gleiche Worte in einer Liste)
 sourceComment6=Gibt es bereits eine Liste für dieses Wort?
 sourceComment7=Erstelle eine neue Liste für dieses Wort
-sourceComment8=Für jede Wortliste, die im "Shuffling" Schritt erstellt wurde:
-sourceComment9=Reduziere auf ein Schlüssel-Wert-Paar, wobei Wert die gesamte Worthäufigkeit ist
+sourceComment8=Für jede Wortliste, die im Shuffling Schritt erstellt wurde:
+sourceComment9=Reduziere auf ein Key-Value-Paar, wobei Wert die gesamte Worthäufigkeit ist
 
 # Introduction Slide 1
 intro1=MapReduce ist ein von Google entwickeltes Modell für nebenläufige Berechnungen von großen Datensätzen.

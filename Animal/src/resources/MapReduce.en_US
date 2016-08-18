@@ -19,6 +19,7 @@ step1=Step 1: Splitting
 step2=Step 2: Mapping
 step3=Step 3: Shuffling
 step4=Step 4: Reducing
+line=Line
 
 # Source Code
 sourceComment1=split between every line in the document
@@ -32,7 +33,7 @@ sourceComment8=for each wordlist created in the shuffle step:
 sourceComment9=reduce sets to one set including the number of word occurences
 
 # Introduction Slide 1
-intro1=MapReduce is a model for parallel processing of large datasets developed by Google. 
+intro1=MapReduce is a model developed by Google, which is used for parallel processing large datasets. 
 intro2=A common implementation in Java is Apache Hadoop.
 intro3=The Algorithm consists of 4 phases:
 intro4=The input is divided into n (sum of lines) chunks
