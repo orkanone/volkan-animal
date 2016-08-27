@@ -106,6 +106,7 @@ public class MapReduceGenerator implements Generator {
     	StringArray inputArray[] = new StringArray[input.length];
     	for(int i=0; i < input.length; i++){
     		inputArray[i] = lang.newStringArray(new Coordinates(60,(55+i*26)), input[i], "input", null, ap);
+    		inputArray[i].showIndices(false, null, null);
     	}
     	
     	lang.nextStep();
@@ -132,6 +133,7 @@ public class MapReduceGenerator implements Generator {
     		lines.add(input[i]);
     		lang.newText(new Coordinates(10,(offset+i*30)), translator.translateMessage("line") + " " + (i+1) + ": ", "Zeilennummer", null, labelprops);
     		inputArray_split[i] = lang.newStringArray(new Coordinates(60,(offset+i*30)), input[i], "split input", null, ap);
+    		inputArray_split[i].showIndices(false, null, null);
     		src.highlight(3);
     		lang.nextStep();
     		for(int j = 0; j < input[i].length; j++)
@@ -165,7 +167,8 @@ public class MapReduceGenerator implements Generator {
         		lang.nextStep();
     			sets.add(new SimpleEntry<String,Integer>(data, count));
     			mapArray[hor_i][vert_i] = lang.newStringArray(new Coordinates(60+hor_i*100,(offset+vert_i*30)), new String[]{data, count.toString()}, "mapArray", null, ap);
-    	    	src.unhighlight(10);
+    			mapArray[hor_i][vert_i].showIndices(false, null, null);
+    			src.unhighlight(10);
     	    	src.highlight(11);
     	    	lang.nextStep();
         		inputArray_split[hor_i].unhighlightCell(vert_i, null, null);
@@ -200,6 +203,7 @@ public class MapReduceGenerator implements Generator {
     		for (String data : line){
         		mapArray[hor_i][vert_i] = lang.newStringArray(new Coordinates(60+hor_i*100, (offset+vert_i*30)), 
         				new String[]{data, count.toString()}, "mapArray", null, ap);
+        		mapArray[hor_i][vert_i].showIndices(false, null, null);
     	    	vert_i++;
     		}
     		lang.newText(new Coordinates(60+hor_i*100, (offset-25)), "Sets "+(hor_i+1), "set_x", null, labelprops);
@@ -248,6 +252,7 @@ public class MapReduceGenerator implements Generator {
     			size_y = hashmap.get(currentkey).size();
     			shuffleArray[size_x][size_y] = lang.newStringArray(new Coordinates(60+size_x*100, (offset+size_y*30)),
 						new String[]{currentkey, set.getValue().toString()}, "shuffled map", null, ap);
+    			shuffleArray[size_x][size_y].showIndices(false, null, null);
     			lang.nextStep();
     			mapArray[hor_i][vert_i].unhighlightCell(0, null, null);
     			mapArray[hor_i][vert_i].unhighlightCell(1, null, null);
@@ -287,6 +292,7 @@ public class MapReduceGenerator implements Generator {
     			if(it == 0){
     	    		reduceArray[hor_i] = lang.newStringArray(new Coordinates(60+hor_i*100, offset),
     						new String[]{current_key, current_value.toString()}, "reduced map", null, ap);
+    	    		reduceArray[hor_i].showIndices(false, null, null);
     			} else {
     				reduceArray[hor_i].put(1, current_value.toString(), null, null);
     			}
