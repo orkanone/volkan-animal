@@ -182,6 +182,14 @@ public class MapReduceGenerator implements Generator {
 
     	//hide all previous steps, but still keep the current progress 
     	lang.hideAllPrimitives();
+    	for(int i=0; i < input.length; i++){
+    		inputArray[i].hide();
+    		inputArray_split[i].hide();
+    		for(int j=0; j < hor_i; j++){
+    			if(mapArray[i][j]!=null)
+    				mapArray[i][j].hide();
+    		}
+    	}
     	headline.show();
     	src_2.show();
     	hor_i = 0;
@@ -291,6 +299,23 @@ public class MapReduceGenerator implements Generator {
     	}
     	
     	lang.hideAllPrimitives();
+    	for(int i=0; i < input.length; i++){
+    		for(int j=0; j < hor_i; j++){
+    			if(mapArray[i][j]!=null)
+    				mapArray[i][j].hide();
+    		}
+    	}
+    	for(int i=0; i < shuffleArray.length; i++){
+    		for(int j=0; j < shuffleArray[i].length; j++){
+    			if(shuffleArray[i][j]!=null)
+    				shuffleArray[i][j].hide();
+    		}
+    	}
+    	/*for(int i=0; i < reduceArray.length; i++){
+    		if(reduceArray[i]!=null)
+    			reduceArray[i].hide();
+    	}*/
+    	
     	
     	//summary
     	headline.show();
