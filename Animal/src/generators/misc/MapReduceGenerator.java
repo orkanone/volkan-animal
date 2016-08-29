@@ -323,7 +323,7 @@ public class MapReduceGenerator implements Generator {
     	}*/
     	
     	
-    	//summary
+    	//summary#
     	headline.show();
     	generateSummary();
     	for(int i=0; i<hor_i;i++)
